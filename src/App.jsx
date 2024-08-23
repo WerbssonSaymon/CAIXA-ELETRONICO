@@ -24,9 +24,9 @@ function App() {
     let saldo = 0; 
 
     listaOperacoes.forEach(x => {
-      if (x.operacao === "depositar") {
-        saldo += x.valor; 
-      } else if (x.operacao === "sacar") {
+      if (x.operacao === "Depositar" ) {
+        saldo += x.valor;    
+      } else if (x.operacao === "Sacar") {
         saldo -= x.valor; 
       } else {
         saldo = x.valor; // Inicia com o valor 1000, sem esse ELSE ele inicia com 0
@@ -36,11 +36,36 @@ function App() {
     return saldo.toFixed(2);
   }
 
+
   function executarMovimentacao() {
+
+    let valorInput = Number(valor)
+
+    if (tipoAcao === 'Depositar' && valorInput <= 0) {
+      alert('O valor do depósito deve ser maior que 0.');
+      setValor('');
+      return;
+    }
+
+    if (tipoAcao === 'Sacar') {
+      let saldoAtual = calcularSaldo();
+
+      if (valorInput <= 0) {
+        alert('O valor do saque deve ser maior que 0.');
+        setValor('');
+        return;
+      }
+      
+      if (valorInput > saldoAtual) {
+        alert('Saldo insuficiente para o saque.');
+        setValor('');
+        return;
+      }
+    }
     
     const novaOperacao = {
       operacao: tipoAcao,
-      valor: Number(valor), 
+      valor: valorInput,
       data: new Date().toLocaleString()
     };
 
@@ -61,9 +86,10 @@ function App() {
           <select className="form-select form-select-lg mb-3"
                   value={tipoAcao}
                   onChange={e => setTipoAcao(e.target.value)}>
+
             <option value="DEFAULT">Escolha uma opção</option>
-            <option value="sacar">Sacar</option>
-            <option value="depositar">Depositar</option>
+            <option value="Sacar">Sacar</option>
+            <option value="Depositar">Depositar</option>
           </select>
 
           {tipoAcao && tipoAcao != "DEFAULT"  && (
