@@ -1,66 +1,51 @@
 import Table from "./componentes/table";
-import Input from "./componentes/input";
-import Button from './componentes/button';
-import Money from './componentes/money';
 import Title from './componentes/title'; 
 
 import { useEffect, useState } from "react";
 
 function App() {
 
-  const [saldo, setSaldo ] = useState(1000); // mudar pra calcular
-  const [valorSaque, setValorSaque] = useState('');
-  const [valorDeposito, setValorDeposito] = useState('');
+  const [valor, setValor] = useState('');
+  const [tipoAcao, setTipoAcao] = useState('')
   const [listaOperacoes, setListaOperacoes] = useState([]);
 
   useEffect(() => {
-    const adicionarOperacao = {
+    const primeiraOperacao = {
       operacao: 'Valor Inicial',
-      valor: saldo,
+      valor: 1000,
       data: new Date().toLocaleString() //bug - só o new Date a tela some
     };
 
-    setListaOperacoes([...listaOperacoes, adicionarOperacao]);
+    setListaOperacoes([primeiraOperacao]);
   }, [])
 
-  function sacar(){
-    if (valorSaque <= saldo && valorSaque > 0){
-      let novoSaldo = saldo - valorSaque;
-      setSaldo(novoSaldo);
-      setValorSaque('')
+  function calcularSaldo() {
 
-      const adicionarOperacao = {
-        operacao: 'Saque',
-        valor: valorSaque,
-        data: new Date().toLocaleString() //bug - só o new Date a tela some
-      };
+    let saldo = 0; 
 
-      setListaOperacoes([...listaOperacoes, adicionarOperacao]);
+    listaOperacoes.forEach(x => {
+      if (x.operacao === "depositar") {
+        saldo += x.valor; 
+      } else if (x.operacao === "sacar") {
+        saldo -= x.valor; 
+      } else {
+        saldo = x.valor; // Inicia com o valor 1000, sem esse ELSE ele inicia com 0
+      }
+    });
 
-    } else {
-      alert("erro ao realizar a operação")
-      setValorSaque('')
-    }
+    return saldo.toFixed(2);
   }
 
-  function depositar(){
-    if (valorDeposito > 0){
-      let novoSaldo = saldo + valorDeposito;
-      setSaldo(novoSaldo);
-      setValorDeposito('')
+  function executarMovimentacao() {
+    
+    const novaOperacao = {
+      operacao: tipoAcao,
+      valor: Number(valor), 
+      data: new Date().toLocaleString()
+    };
 
-      const adicionarOperacao = {
-        operacao: 'Deposito',
-        valor: valorDeposito,
-        data: new Date().toLocaleString() //bug - só o new Date a tela some
-      };
-
-      setListaOperacoes([...listaOperacoes, adicionarOperacao]);
-
-    } else {
-      alert("valor não possivel de depositar")
-      setValorDeposito('')
-    }
+    setListaOperacoes([...listaOperacoes, novaOperacao]);
+    setValor('');
   }
 
 
@@ -70,18 +55,27 @@ function App() {
         
         <Title titulo="caixa eletrônico"/>
         
-        <Money saldo={saldo}/>
+        <span>{calcularSaldo()}</span>
 
-        <div class="d-grid gap-2">
-          <label className="mt-5">Saque seu dinheiro</label>
-          <Input value={valorSaque} onChange={e => setValorSaque(Number(e.target.value))}/>
-          <Button onClick={sacar} nome="sacar"/>
-        </div>
-        
-        <div class="d-grid gap-2">
-          <label className="mt-5">Faça um deposito</label>
-          <Input value={valorDeposito} onChange={e => setValorDeposito(Number(e.target.value))}/>
-          <Button onClick={depositar} nome="depositar"/>
+        <div className="d-grid gap-2">
+          <select className="form-select form-select-lg mb-3"
+                  value={tipoAcao}
+                  onChange={e => setTipoAcao(e.target.value)}>
+            <option value="DEFAULT">Escolha uma opção</option>
+            <option value="sacar">Sacar</option>
+            <option value="depositar">Depositar</option>
+          </select>
+
+          {tipoAcao && tipoAcao != "DEFAULT"  && (
+            <>
+              <input
+                type="number"
+                value={valor}
+                onChange={e => setValor(e.target.value)}
+              />
+              <button onClick={executarMovimentacao}>Confirmar</button>
+            </>
+          )}
         </div>
         
         <h3 className="text-center">Historico de movimentação</h3>
@@ -90,7 +84,7 @@ function App() {
           <thead>
             <tr>     
               <th>Operação</th>
-              <th>Saldo</th>
+              <th>Valor</th>
               <th>Data de Transação</th>
             </tr>
           </thead>
@@ -98,10 +92,10 @@ function App() {
             {listaOperacoes.map((x, i) => ( //variavel i de index pós meu objeto retornado não tem id pra usar na key
               <tr key={i}>
                 <td>{x.operacao} </td>
-                <td>{x.valor.toFixed(2)}</td> 
+                <td>R$ {x.valor.toFixed(2)}</td> 
                 <td>{x.data}</td>
               </tr>
-            ))}
+            ))} 
           </tbody>
         </Table>
       </div>
