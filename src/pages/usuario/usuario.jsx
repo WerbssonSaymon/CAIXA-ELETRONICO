@@ -46,7 +46,6 @@ export default function usuario() {
     alert(`Usuário ${novoUsuario.nome.toUpperCase()} cadastrado com sucesso`);
   }
 
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <Menu />
@@ -60,17 +59,6 @@ export default function usuario() {
                 </div>
 
                 <div className="p-2 w-full d-grid">
-                    <input
-                    className="form-control border border-primary mt-5"
-                    type="text"
-                    value={nome}
-                    onChange={e => setNome(e.target.value)}
-                    />
-                    <button
-                    className="btn btn-lg btn-primary" 
-                    onClick={cadastrarUsuario}>Confirmar
-                    </button>
-
                     <select
                         className="form-select form-select-lg border border-primary my-3"
                         value={usuarioSelecionado}
@@ -78,9 +66,23 @@ export default function usuario() {
                         <option value="">Selecione um usuário</option>
                         {listaUsuarios.map((x, i) => (
                             <option key={i} value={x.nome}>{x.nome}</option>
+                            
                         ))}
                     </select>
+
+                    <input
+                    className="form-control border border-primary mt-5"
+                    type="text"
+                    value={nome}
+                    onChange={e => setNome(e.target.value)}
+                    />
+                    <button
+                    className="btn btn-lg btn-success" 
+                    onClick={cadastrarUsuario}>Confirmar
+                    </button>
+
                 </div>
+                
             </div>
         </div>
 

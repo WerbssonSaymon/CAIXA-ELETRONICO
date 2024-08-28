@@ -8,6 +8,7 @@ export default function menu() {
             <Link className='navbar-brand' to={`/`}>inicio</Link>
             <Link className='navbar-brand' to={`/usuarios`}>cadastro</Link>
             <Link className='navbar-brand' to={`/banco`}>banco</Link>
+            <Link className='navbar-brand' to={`/gestao`}>gestao</Link>
         </div>
     </nav>
   )
