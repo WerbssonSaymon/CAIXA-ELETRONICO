@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "github": "git add . && git commit -m \"correão de logica e layout\" && git push origin modo-4"
+    "github": "git add . && git commit -m \" Pasta de serviços e desacoplamento da page: usuario \" && git push origin modo-5"
   },
   "dependencies": {
     "react": "^18.3.1",

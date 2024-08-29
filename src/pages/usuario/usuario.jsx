@@ -1,5 +1,6 @@
 import React from 'react'
 import Menu from '../../layout/menu'
+import { cadastrarUsuario } from '../../services/usuarioService';
 
 import { useState, useEffect } from "react";
 
@@ -14,36 +15,7 @@ export default function usuario() {
                 setListaUsuarios(usuariosSalvos);
             }
         }, []);
-
-  // Cadastra, valida, inseri primeira transação e renderiza pelo usuario selecionado
-  function cadastrarUsuario() {
-    const usuarioIgual = listaUsuarios.find(usuario => usuario.nome.toLowerCase() === nome.toLowerCase());
-
-    if (usuarioIgual) {
-      alert('Já existe um usuário com esse nome.');
-      setNome('');
-      return;
-    }
-
-    if (nome === '') {
-      alert('Por favor, defina um nome');
-      setNome('');
-      return;
-    }
-
-    const novoUsuario = {
-      nome: nome,
-    };
-
-    const novaListaUsuarios = [...listaUsuarios, novoUsuario];
-    setListaUsuarios(novaListaUsuarios);
-    setNome('');
-
-
-    localStorage.setItem('usuarios', JSON.stringify(novaListaUsuarios));
-
-    alert(`Usuário ${novoUsuario.nome.toUpperCase()} cadastrado com sucesso`);
-  }
+  
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -67,7 +39,7 @@ export default function usuario() {
                     />
                     <button
                     className="btn btn-lg btn-success" 
-                    onClick={cadastrarUsuario}>Confirmar
+                    onClick={() => cadastrarUsuario(listaUsuarios, nome, setListaUsuarios, setNome)}>Confirmar
                     </button>
 
                 </div>
