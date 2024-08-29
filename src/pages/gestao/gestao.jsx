@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Menu from '../../layout/menu'
 import Title from '../../componentes/title'
+import { limparUsuarios, removerUsuario, calcularSaldo } from '../../services/gestaoService'
 
 export default function gestao() {
 
@@ -10,38 +11,6 @@ export default function gestao() {
     const usuariosSalvos = JSON.parse(localStorage.getItem('usuarios')) || [];
     setListaUsuarios(usuariosSalvos);
   }, [])
-
-  function calcularSaldo(usuarioNome){
-    const usuario = listaUsuarios.find(usuario => usuario.nome === usuarioNome);
-    if (!usuario || !usuario.operacoes) 
-      return '0,00';
-
-    return usuario.operacoes.reduce((saldo, o) => {
-      if (o.operacao.startsWith('Depositar'))
-        return saldo + o.valor;
-      if (o.operacao.startsWith('Sacar'))
-        return saldo - o.valor;
-      if (o.operacao.startsWith('Debito - '))
-        return saldo - o.valor;
-      if (o.operacao.startsWith('Credito - '))
-        return saldo + o.valor;
-      return saldo = o.valor;
-  }, 0);
-  };
-
-  function removerUsuario(nomeUsuario){
-    const novaListaUsuarios = listaUsuarios.filter(usuario => usuario.nome !== nomeUsuario)
-
-    setListaUsuarios(novaListaUsuarios)
-    localStorage.setItem('usuarios', JSON.stringify(novaListaUsuarios))
-  }
-
-  function limparUsuarios(){
-    localStorage.clear();
-    window.location.reload(false);
-  }
-
-  console.log(listaUsuarios)
     
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -62,13 +31,13 @@ export default function gestao() {
                     key={i}>
                     {u.nome}
                     <span>
-                      {calcularSaldo(u.nome).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
+                      {calcularSaldo(u.nome, listaUsuarios).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
                     </span>
                    
 
                         <button 
                         className='btn btn-danger'
-                        onClick={() => removerUsuario(u.nome)}>Remover
+                        onClick={() => removerUsuario(u.nome, listaUsuarios, setListaUsuarios)}>Remover
                         </button>
                 </li>
             ))}
