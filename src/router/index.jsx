@@ -5,6 +5,9 @@ import Usuario from '../pages/usuario/usuario';
 import Banco from '../pages/banco/banco';
 import Gestao from '../pages/gestao/gestao';
 import Error from '../pages/error/error'
+import Jogo from '../pages/jogo/jogo'
+import Perguntas from '../pages/perguntas/perguntas'
+import AdminPergunta from '../pages/adminPergunta/adminPergunta'
 
 
 export default function index() {
@@ -26,6 +29,18 @@ export default function index() {
         {
             path: '/gestao',
             element: <Gestao />
+        },
+        {
+            path: '/jogo',
+            element: <Jogo />
+        },
+        {
+            path: '/perguntas',
+            element: <Perguntas />
+        },
+        {
+            path: '/ad-perguntas',
+            element: <AdminPergunta/>
         }
     ]);
 

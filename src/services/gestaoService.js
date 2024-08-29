@@ -6,7 +6,7 @@ export function removerUsuario(nomeUsuario, listaUsuarios, setListaUsuarios){
 }
 
 export function limparUsuarios(){
-    localStorage.clear();
+    localStorage.removeItem('usuarios');
     window.location.reload(false);
 }
 

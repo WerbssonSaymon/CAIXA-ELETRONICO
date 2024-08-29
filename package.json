@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "github": "git add . && git commit -m \" Desacoplamento da page: banco \" && git push origin modo-5"
+    "github": "git add . && git commit -m \" Cadastro e gerenciamento de perguntas já com arquivo de service e duas novas rotas e paginas \" && git push origin modo-5"
   },
   "dependencies": {
     "react": "^18.3.1",
