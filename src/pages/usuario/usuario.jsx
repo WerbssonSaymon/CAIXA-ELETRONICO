@@ -7,7 +7,6 @@ export default function usuario() {
 
     const [listaUsuarios, setListaUsuarios] = useState([]);
     const [nome, setNome] = useState('');
-    const [usuarioSelecionado, setUsuarioSelecionado] = useState('');
 
     useEffect(() => {
         const usuariosSalvos = JSON.parse(localStorage.getItem('usuarios'));
@@ -59,16 +58,6 @@ export default function usuario() {
                 </div>
 
                 <div className="p-2 w-full d-grid">
-                    <select
-                        className="form-select form-select-lg border border-primary my-3"
-                        value={usuarioSelecionado}
-                        onChange={e => setUsuarioSelecionado(e.target.value)}>
-                        <option value="">Selecione um usuário</option>
-                        {listaUsuarios.map((x, i) => (
-                            <option key={i} value={x.nome}>{x.nome}</option>
-                            
-                        ))}
-                    </select>
 
                     <input
                     className="form-control border border-primary mt-5"

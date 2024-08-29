@@ -11,6 +11,24 @@ export default function gestao() {
     setListaUsuarios(usuariosSalvos);
   }, [])
 
+  function calcularSaldo(usuarioNome){
+    const usuario = listaUsuarios.find(usuario => usuario.nome === usuarioNome);
+    if (!usuario || !usuario.operacoes) 
+      return '0,00';
+
+    return usuario.operacoes.reduce((saldo, o) => {
+      if (o.operacao.startsWith('Depositar'))
+        return saldo + o.valor;
+      if (o.operacao.startsWith('Sacar'))
+        return saldo - o.valor;
+      if (o.operacao.startsWith('Debito - '))
+        return saldo - o.valor;
+      if (o.operacao.startsWith('Credito - '))
+        return saldo + o.valor;
+      return saldo = o.valor;
+  }, 0);
+  };
+
   function removerUsuario(nomeUsuario){
     const novaListaUsuarios = listaUsuarios.filter(usuario => usuario.nome !== nomeUsuario)
 
@@ -22,6 +40,8 @@ export default function gestao() {
     localStorage.clear();
     window.location.reload(false);
   }
+
+  console.log(listaUsuarios)
     
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -41,6 +61,11 @@ export default function gestao() {
                 <li className='list-group-item d-flex justify-content-between align-items-center' 
                     key={i}>
                     {u.nome}
+                    <span>
+                      {calcularSaldo(u.nome).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
+                    </span>
+                   
+
                         <button 
                         className='btn btn-danger'
                         onClick={() => removerUsuario(u.nome)}>Remover

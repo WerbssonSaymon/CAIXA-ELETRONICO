@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "github": "git add . && git commit -m \"Transações bancarias, estilização e pagina de erro\" && git push origin modo-3"
+    "github": "git add . && git commit -m \"correão de logica e layout\" && git push origin modo-4"
   },
   "dependencies": {
     "react": "^18.3.1",

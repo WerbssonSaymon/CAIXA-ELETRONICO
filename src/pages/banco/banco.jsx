@@ -22,10 +22,6 @@ export default function banco() {
       data: new Date().toLocaleString() 
     };
 
-    // {
-    //   nome: saymon,
-    // }
-
     if (usuariosSalvos) {
       const usuariosAtualizados = usuariosSalvos.map(usuario => {
 
@@ -37,20 +33,10 @@ export default function banco() {
         return usuario;
       });
 
-      // usuario 
-      // {
-      //   nome: saymon,
-      //   operacao: [
-      //     {
-      //       operacao: 'Valor Inicial',
-      //       valor: 1000,
-      //       data: new Date().toLocaleString() 
-      //     }
-      //   ]
-      // }
-
       localStorage.setItem('usuarios', JSON.stringify(usuariosAtualizados));
       setListaUsuarios(usuariosAtualizados);
+
+      console.log(localStorage.getItem('usuarios'))
     }
   }, []);
 
@@ -64,64 +50,75 @@ export default function banco() {
         return saldo + o.valor;
       if (o.operacao.startsWith('Sacar'))
         return saldo - o.valor;
-      if (o.operacao.startsWith('Transferir para'))
+      if (o.operacao.startsWith('Debito - '))
         return saldo - o.valor;
-      if (o.operacao.startsWith('Recebido de'))
+      if (o.operacao.startsWith('Credito - '))
         return saldo + o.valor;
       return saldo = o.valor;
-  }, 0).toFixed(2);
+  }, 0);
   };
 
-  function executarMovimentacao(){
-    
+  function executarMovimentacao() {
     const usuario = listaUsuarios.find(usuario => usuario.nome === usuarioSelecionado);
-
+  
     if (!usuario) {
       alert('Selecione um usuário.');
       return;
     }
-
+  
     let valorInput = Number(valor);
-
+  
     if (tipoAcao === 'Depositar' && valorInput <= 0) {
       alert('O valor do depósito deve ser maior que 0.');
       setValor('');
       return;
     }
-
+  
     if (tipoAcao === 'Sacar') {
       let saldoAtual = calcularSaldo(usuarioSelecionado);
-
+  
       if (valorInput <= 0) {
         alert('O valor do saque deve ser maior que 0.');
         setValor('');
         return;
       }
-
+  
       if (valorInput > saldoAtual) {
         alert('Saldo insuficiente para o saque.');
         setValor('');
         return;
       }
     }
-
-    if (tipoAcao === "Transferir"){
-
+  
+    if (tipoAcao === "Transferir") {
       const usuarioDeDestino = listaUsuarios.find(usuario => usuario.nome === usuarioDestinatario);
+      let saldoAtual = calcularSaldo(usuarioSelecionado);
       
       if (!usuarioDeDestino) {
         alert('Selecione um destinatário válido.');
         return;
       }
 
+      if (valorInput <= 0) {
+        alert('O valor da transferencia deve ser maior que 0.');
+        setValor('');
+        return;
+      }
+  
+      if (valorInput > saldoAtual) {
+        alert('Saldo insuficiente para transferencia.');
+        setValor('');
+        return;
+      }
+  
       const novaOperacao = {
-        operacao: 'Transferir para ' + usuarioDestinatario,
+        operacao: 'Debito - ' + usuarioDestinatario,
         valor: valorInput,
         data: new Date().toLocaleString()
       };
   
       const novaOperacaoDestinatario = {
-        operacao: 'Recebido de ' + usuarioSelecionado,
+        operacao: 'Credito - ' + usuarioSelecionado,
         valor: valorInput,
         data: new Date().toLocaleString()
       };
@@ -129,14 +126,7 @@ export default function banco() {
       usuario.operacoes.push(novaOperacao);
       usuarioDeDestino.operacoes.push(novaOperacaoDestinatario);
   
-      setListaUsuarios([...listaUsuarios]);
-      localStorage.setItem('usuarios', JSON.stringify(listaUsuarios));
-      setListaOperacoes(usuario.operacoes);
-      setValor('');
-      setUsuarioDestinatario('');
-
     } else {
-
       const novaOperacao = {
         operacao: tipoAcao,
         valor: valorInput,
@@ -144,14 +134,25 @@ export default function banco() {
       };
   
       usuario.operacoes.push(novaOperacao);
-  
-      setListaUsuarios([...listaUsuarios]);
-      localStorage.setItem('usuarios', JSON.stringify(listaUsuarios));
-      setListaOperacoes(usuario.operacoes);
-      setValor('');
     }
-  };
-
+  
+    const usuariosAtualizados = listaUsuarios.map(usuario => {
+      if (usuario.nome === usuarioSelecionado) {
+        return { ...usuario, operacoes: usuario.operacoes };
+      }
+      if (tipoAcao === "Transferir" && usuario.nome === usuarioDestinatario) {
+        return { ...usuario, operacoes: usuario.operacoes };
+      }
+      return usuario;
+    });
+  
+    setListaUsuarios(usuariosAtualizados);
+    localStorage.setItem('usuarios', JSON.stringify(usuariosAtualizados));
+    setListaOperacoes(usuario.operacoes);
+    setValor('');
+    setUsuarioDestinatario('');
+  }
+  
   function lidarComUsuarioSelecionado(e) {
     const usuarioNomeSelecionado = e.target.value;
     setUsuarioSelecionado(usuarioNomeSelecionado);
@@ -161,9 +162,10 @@ export default function banco() {
     if (usuarioEncontrado && usuarioEncontrado.operacoes) {
       setListaOperacoes(usuarioEncontrado.operacoes);
     } else {
-      setListaOperacoes([]);  // Garante que seja uma lista vazia
+      setListaOperacoes([]);  
     }
   }
+
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -193,7 +195,7 @@ export default function banco() {
             {usuarioSelecionado && (
               <div className="col-4 p-2 bg-primary text-white fw-3">
                 <h3 className='text-center'>Bem vindo(a): {usuarioSelecionado}</h3> 
-                <h3 className='text-center'>Saldo atual: {calcularSaldo(usuarioSelecionado)}</h3>
+                <h3 className='text-center'>Saldo atual: {calcularSaldo(usuarioSelecionado).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</h3>
 
                 {usuarioSelecionado && (
                     <div className="p-2">
@@ -266,11 +268,11 @@ export default function banco() {
                       </thead>
                       <tbody className="table-group-divider">
                       
-                          {listaOperacoes.map((x, i) => ( 
+                          {listaOperacoes.map((u, i) => ( 
                             <tr key={i}>
-                              <td>{x.operacao} </td>
-                              <td>{x.valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</td> 
-                              <td>{x.data}</td>
+                              <td>{u.operacao} </td>
+                              <td>{u.valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</td> 
+                              <td>{u.data}</td>
                             </tr>
                           ))} 
                         
