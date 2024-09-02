@@ -3,6 +3,7 @@ import Menu from "../../layout/menu";
 import Title from "../../componentes/title";
 import { limparPerguntas, removerPergunta } from "../../services/adminPergunta";
 import { useState, useEffect } from "react";
+import {perguntas} from '../../data/quests';
 
 export default function adminPergunta() {
   const [listaDePerguntas, setListaDePerguntas] = useState([]);
@@ -11,6 +12,17 @@ export default function adminPergunta() {
     const perguntasSalvas = JSON.parse(localStorage.getItem("perguntas")) || [];
     setListaDePerguntas(perguntasSalvas);
   }, []);
+
+  function adicionarPerguntas() {
+
+    const perguntasSalvas = JSON.parse(localStorage.getItem("perguntas")) || [];
+    
+    const perguntasAtualizadas = [...perguntasSalvas, ...perguntas];
+    
+    localStorage.setItem("perguntas", JSON.stringify(perguntasAtualizadas));
+    
+    setListaDePerguntas(perguntasAtualizadas);
+  }
 
   console.log(localStorage.getItem("perguntas"));
 
@@ -22,6 +34,13 @@ export default function adminPergunta() {
         style={{ flex: 1, width: "100vw" }}
       >
         <Title titulo="Area de gerenciamento de perguntas" />
+
+        <button
+          className="btn btn-lg btn-success mt-5 w-50 mb-5"
+          onClick={adicionarPerguntas}
+        >
+          Adicionar Perguntas
+        </button>
 
         <button
           className="btn btn-lg btn-danger mt-5 w-50 mb-5"

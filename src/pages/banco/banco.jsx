@@ -40,7 +40,6 @@ export default function banco() {
       localStorage.setItem("usuarios", JSON.stringify(usuariosAtualizados));
       setListaUsuarios(usuariosAtualizados);
 
-      console.log(localStorage.getItem("usuarios"));
     }
   }, []);
 
