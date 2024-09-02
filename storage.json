@@ -1,0 +1,87 @@
+[
+    {
+        "nome": "luiz",
+        "operacoes": [
+            {
+                "operacao": "Valor Inicial",
+                "valor": 1000,
+                "data": "29/08/2024, 17:17:39"
+            },
+            {
+                "operacao": "Credito - marcos",
+                "valor": 250,
+                "data": "29/08/2024, 17:18:04"
+            }
+        ],
+        "historico": [
+            {
+                "data": "02/09/2024",
+                "pontuacao": 0
+            },
+            {
+                "data": "02/09/2024",
+                "pontuacao": 3000
+            },
+            {
+                "operacao": "jogo",
+                "valor": 2000,
+                "data": "02/09/2024"
+            },
+            {
+                "operacao": "jogo",
+                "valor": 1000,
+                "data": "02/09/2024"
+            },
+            {
+                "operacao": "jogo",
+                "valor": 500,
+                "data": "02/09/2024"
+            },
+            {
+                "operacao": "jogo",
+                "valor": 500,
+                "data": "02/09/2024"
+            },
+            {
+                "operacao": "jogo",
+                "valor": 500,
+                "data": "02/09/2024"
+            },
+            {
+                "operacao": "jogo",
+                "valor": 2000,
+                "data": "02/09/2024"
+            },
+            {
+                "operacao": "jogo",
+                "valor": 1000,
+                "data": "02/09/2024"
+            },
+            {
+                "operacao": "jogo",
+                "valor": 0,
+                "data": "02/09/2024"
+            },
+            {
+                "operacao": "jogo",
+                "valor": 500,
+                "data": "02/09/2024"
+            }
+        ]
+    },
+    {
+        "nome": "marcos",
+        "operacoes": [
+            {
+                "operacao": "Valor Inicial",
+                "valor": 1000,
+                "data": "29/08/2024, 17:17:54"
+            },
+            {
+                "operacao": "Debito - luiz",
+                "valor": 250,
+                "data": "29/08/2024, 17:18:04"
+            }
+        ]
+    }
+]

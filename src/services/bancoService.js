@@ -14,6 +14,7 @@ export function calcularSaldo(usuarioNome, listaUsuarios) {
     if (o.operacao.startsWith("Sacar")) return saldo - o.valor;
     if (o.operacao.startsWith("Debito - ")) return saldo - o.valor;
     if (o.operacao.startsWith("Credito - ")) return saldo + o.valor;
+    if (o.operacao.startsWith("Jogo")) return saldo + o.valor;
     return (saldo = o.valor);
   }, 0);
 }
