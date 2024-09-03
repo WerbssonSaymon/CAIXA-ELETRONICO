@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "github": "git add . && git commit -m \" Perguntas no localstorage e funcionalidades de ajuda no jogo  \" && git push origin modo-5"
+    "github": "git add . && git commit -m \" Correção de layout e funcionalidades \" && git push origin modo-5"
   },
   "dependencies": {
     "chart.js": "^4.4.4",

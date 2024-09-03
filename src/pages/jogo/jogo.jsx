@@ -1,6 +1,7 @@
 import React from "react";
 import Menu from "../../layout/menu";
 import Title from "../../componentes/title";
+import Grafico from '../../componentes/grafich'
 import { useState, useEffect } from "react";
 import { valores } from "../../data/quests";
 
@@ -14,6 +15,10 @@ export default function Jogo() {
   const [listaUsuarios, setListaUsuarios] = useState([]);
   const [nome, setNome] = useState("");
   const [cliques, setCliques] = useState(0);
+  const [cartas, setCartas] = useState(false);
+  const [grafico, setGrafico] = useState(false);
+  const [botaoCartas, setBotaoCartas] = useState(false);
+  const [botaoGrafico, setBotaoGrafico] = useState(false);
 
   useEffect(() => {
     const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios"));
@@ -25,6 +30,7 @@ export default function Jogo() {
   useEffect(() => {
     if (nome) {
       const selecaoPerguntas = selecionarPerguntas();
+
       setPerguntasSelecionadas(selecaoPerguntas);
       if (selecaoPerguntas.length > 0) {
         setAlternativasEmbaralhadas(
@@ -47,6 +53,7 @@ export default function Jogo() {
 
   function selecionarPerguntas() {
     const perguntas = JSON.parse(localStorage.getItem("perguntas"));
+
     const perguntasFaceis = perguntas.filter((p) => p.dificuldade === "fácil");
     const perguntasMedias = perguntas.filter((p) => p.dificuldade === "médio");
     const perguntasDificeis = perguntas.filter(
@@ -55,13 +62,13 @@ export default function Jogo() {
 
     const perguntasEmbaralhadasFaceis = embaralharPerguntas(
       perguntasFaceis
-    ).slice(0, 3);
+    ).slice(0, 10);
     const perguntasEmbaralhadasMedias = embaralharPerguntas(
       perguntasMedias
-    ).slice(0, 0);
+    ).slice(0, 7);
     const perguntasEmbaralhadasDificeis = embaralharPerguntas(
       perguntasDificeis
-    ).slice(0, 0);
+    ).slice(0, 5);
 
     return [
       ...perguntasEmbaralhadasFaceis,
@@ -135,6 +142,7 @@ export default function Jogo() {
       }
     }
     setCliques((cliques) => cliques + 1);
+    console.log("oi")
   }
 
   function atualizarHistorico(nomeUsuario, novaPontuacao) {
@@ -173,51 +181,64 @@ export default function Jogo() {
     setPerguntaAtual(0);
     setPontuacao(0);
     setJogoTerminado(false);
-    setMensagemFinal('');
+    setMensagemFinal("");
     setAlternativasEmbaralhadas([]);
-    setNome('');
+    setNome("");
     setCliques(0);
+    setGrafico(false);
+    setBotaoCartas(false)
+    setBotaoGrafico(false)
   }
 
   function eliminarAlternativas(carta) {
     let novasAlternativas = [...alternativasEmbaralhadas];
     const alternativaCorreta = perguntasSelecionadas[perguntaAtual].resposta;
-  
+
     // Filtra as alternativas incorretas
     let alternativasIncorretas = novasAlternativas.filter(
       (alt) => alt !== alternativaCorreta
     );
-  
+
     switch (carta) {
       case "rei":
-        alert("nenhuma alternativa removida")
+        alert("nenhuma alternativa removida");
         break;
       case "ás":
         if (alternativasIncorretas.length > 0) {
-          alternativasIncorretas = alternativasIncorretas.slice(0, -1); 
-          alert("Uma alternativa removida")
+          alternativasIncorretas = alternativasIncorretas.slice(0, -1);
+          alert("Uma alternativa removida");
         }
         break;
       case "2":
         if (alternativasIncorretas.length > 1) {
-          alternativasIncorretas = alternativasIncorretas.slice(0, -2); 
-          alert("Dois alternativa removida")
-        } 
+          alternativasIncorretas = alternativasIncorretas.slice(0, -2);
+          alert("Dois alternativa removida");
+        }
         break;
       case "3":
         if (alternativasIncorretas.length > 2) {
           alternativasIncorretas = alternativasIncorretas.slice(0, -3);
-          alert("Três alternativa removida")
-        } 
+          alert("Três alternativa removida");
+        }
         break;
       default:
         break;
     }
-  
+
     novasAlternativas = [alternativaCorreta, ...alternativasIncorretas];
     setAlternativasEmbaralhadas(embaralharPerguntas(novasAlternativas));
   }
-  
+
+  function mostrarCartas(){
+    setCartas(!cartas)
+    setBotaoCartas(true);
+  }
+
+  function mostrarGrafico(){
+    setGrafico(!grafico)
+    setBotaoGrafico(true);
+  }
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Menu />
@@ -227,80 +248,127 @@ export default function Jogo() {
       >
         <Title titulo="Show do Milhão" />
         <div>
-          <h2>Selecione um Usuário</h2>
-          <select onChange={(e) => setNome(e.target.value)} value={nome}>
-            <option value="">Selecione um usuário</option>
-            {listaUsuarios.map((usuario, index) => (
-              <option key={index} value={usuario.nome}>
-                {usuario.nome}
-              </option>
-            ))}
-          </select>
-          {nome && <h3>Vamos jogar: {nome}</h3>}
-          {<span>{pontuacao}</span>}
+          {!nome && (
+          <>
+            <h2>Selecione um Usuário</h2>
+            <select 
+            className="form-select form-select-lg border border-primary"
+            onChange={(e) => setNome(e.target.value)} value={nome}>
+              <option value="">Selecione um jogador</option>
+              {listaUsuarios.map((usuario, index) => (
+                <option key={index} value={usuario.nome}>
+                  {usuario.nome}
+                </option>
+              ))}
+            </select>
+          </>
+        )} 
+          
         </div>
-
+       
         {!jogoTerminado ? (
-          <div className="bg-body">
+          <div className="bg-body w-75">
+            {nome && 
+             <div className="bg-primary p-3 d-flex align-items-center justify-content-around">      
+                  <h3 className="text-white">Partipante:  {nome}</h3>
+                  <span className="fs-3 text-white fw-semibold">{pontuacao.toLocaleString("pt-br", {
+                        style: "currency",
+                        currency: "BRL",
+                  })}</span>  
+              </div>
+              }
             {perguntasSelecionadas.length > 0 && (
               <>
-                <h2>{perguntasSelecionadas[perguntaAtual].pergunta}</h2>
-                {alternativasEmbaralhadas.map((alternativa, index) => (
-                  <button
-                    className="btn btn-primary"
-                    key={index}
-                    onClick={() => verificarResposta(alternativa)}
-                  >
-                    {alternativa}
-                  </button>
-                ))}
-                <button className="btn btn-danger" onClick={pararJogo}>
-                  Parar
-                </button>
-                <button
-                  className={`btn btn-warning ${
-                    cliques >= 3 ? "disabled" : ""
-                  }`}
-                  disabled={cliques >= 3}
-                  onClick={pularPergunta}
-                >
-                  Pular
-                </button>
-                <div>
-                  <h3>Escolha uma carta para eliminar alternativas</h3>
-                  <select
-                    onChange={(e) => eliminarAlternativas(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="rei">Rei - Nenhuma alternativa é eliminada</option>
-                    <option value="ás">Ás - Elimina uma alternativa errada</option>
-                    <option value="2">2 - Elimina 2 alternativas erradas</option>
-                    <option value="3">3 - Elimina 3 alternativas erradas</option>
-                  </select>
-                  <button
-                    className="btn btn-primary mt-2"
-                    onClick={() => {
-                      const cartaSelecionada = document.querySelector(
-                        'select.form-select'
-                      ).value;
-                      eliminarAlternativas(cartaSelecionada);
-                    }}
-                  >
-                    Eliminar Alternativas
-                  </button>
+                <div className="bg-danger p-3">
+                  <h2 className="text-white">{perguntasSelecionadas[perguntaAtual].pergunta}</h2>
                 </div>
-
+                <div className="d-flex flex-column gap-1 m-1">
+                  {alternativasEmbaralhadas.map((alternativa, index) => (
+                    <button
+                      className="btn btn-danger p-3 fw-3 w-75 d-flex justify-content-start"
+                      key={index}
+                      onClick={() => verificarResposta(alternativa)}
+                    >
+                      {index + 1} - {alternativa}
+                    </button>
+                  ))}
+                </div>
+                
+                <div className="d-flex gap-1 m-2 pt-3">
+                  <button
+                    className={`btn btn-warning flex-grow-1 ${
+                      cliques >= 3 ? "disabled" : ""
+                    }`}
+                    disabled={cliques >= 3}
+                    onClick={pularPergunta}
+                  >
+                    Pular
+                  </button>
+                  <button
+                    className={`btn btn-warning flex-grow-1 `}
+                    onClick={mostrarCartas}
+                    disabled={botaoCartas}
+                  >
+                    Cartas
+                  </button>
+                  <button
+                    className={`btn btn-warning flex-grow-1`}
+                    onClick={mostrarGrafico}
+                    disabled={botaoGrafico}
+                  >
+                    Universitário
+                  </button>
+                </div>          
+                { cartas &&
+                  (
+                    <div className="w-100 d-flex flex-column align-items-center justify-content-center">
+                      <select
+                        onChange={(e) => eliminarAlternativas(e.target.value)}
+                        className="form-select"
+                      >
+                        <option value="">Escolha uma carta</option>
+                        <option value="rei">X</option>
+                        <option value="ás">X</option>
+                        <option value="2">X</option>
+                        <option value="3">X</option>
+                      </select>
+                      <button 
+                      className="btn btn-danger text-white flex-grow-1"
+                      onClick={() => setCartas(false)}
+                      >
+                        X</button>
+                    </div>
+                  )
+                }
+                { grafico &&
+                  (
+                    <div className="w-100 d-flex flex-column align-items-center justify-content-center">
+                      <Grafico/>
+                      <button 
+                      className="btn btn-danger text-white flex-grow-1"
+                      onClick={() => setGrafico(false)}
+                      >
+                        X</button>
+                    </div>
+                    
+                  )
+                }
               </>
             )}
           </div>
         ) : (
           <h2>{mensagemFinal}</h2>
         )}
-        <button className="btn btn-warning" onClick={restartarJogo}>
-           Reiniciar
-        </button>
+        
       </div>
-      
+      <footer className="w-100 d-flex justify-content-center">
+        <button className="btn btn-warning w-50" onClick={restartarJogo}>
+          Reiniciar
+        </button>
+        <button className="btn btn-danger w-50" onClick={pararJogo}>
+          Parar
+        </button>
+      </footer>
     </div>
   );
 }

@@ -25,6 +25,28 @@ export const perguntas = [
     dificuldade: "fácil",
   },
   {
+    pergunta: "Qual é o elemento mais abundante na crosta terrestre?",
+    alternativas: ["Ouro", "Ferro", "Silício", "Cálcio"],
+    resposta: "Silício",
+    dificuldade: "fácil",
+  },
+  {
+    pergunta: "Qual é a capital do Brasil?",
+    alternativas: ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"],
+    resposta: "Brasília",
+    dificuldade: "fácil",
+  },
+  { pergunta: "Qual é o animal mais rápido do mundo?",
+     alternativas: ["Leão", "Guepardo", "Elefante", "Cavalo"], 
+     resposta: "Guepardo",
+      dificuldade: "fácil", 
+  },
+  { pergunta: "Qual é o animal asociado há um pecado capital?",
+    alternativas: ["Leão", "Preguiça", "Elefante", "Cobra"], 
+    resposta: "Preguiça",
+     dificuldade: "fácil", 
+ },
+  {
     pergunta: "Quantos continentes existem no mundo?",
     alternativas: ["5", "6", "7", "8"],
     resposta: "7",
@@ -57,7 +79,7 @@ export const perguntas = [
     pergunta: "Qual é a cor do céu?",
     alternativas: ["Azul", "Verde", "Amarelo", "Roxo"],
     resposta: "Azul",
-    dificuldade: "fácil",
+    dificuldade: "fácil", 
   },
   {
     pergunta: "Qual é a capital da Alemanha?",
@@ -69,6 +91,36 @@ export const perguntas = [
     pergunta: "Em que ano o homem pisou na Lua pela primeira vez?",
     alternativas: ["1965", "1969", "1972", "1980"],
     resposta: "1969",
+    dificuldade: "médio",
+  },
+  {
+    pergunta: "Quem foi o líder da Revolução Russa de 1917?",
+    alternativas: ["Leon Trotsky", "Joseph Stalin", "Vladimir Lenin", "Nikita Khrushchev"],
+    resposta: "Vladimir Lenin",
+    dificuldade: "médio",
+  },
+  {
+    pergunta: "Qual é a capital do Canadá?",
+    alternativas: ["Toronto", "Vancouver", "Ottawa", "Montreal"],
+    resposta: "Ottawa",
+    dificuldade: "médio",
+  },
+  {
+    pergunta: "Qual é a principal fonte de energia do Sol?",
+    alternativas: ["Fusão nuclear", "Fissão nuclear", "Energia térmica", "Energia eólica"],
+    resposta: "Fusão nuclear",
+    dificuldade: "médio",
+  },
+  {
+    pergunta: "Quem pintou o teto da Capela Sistina?",
+    alternativas: ["Leonardo da Vinci", "Raphael", "Michelangelo", "Caravaggio"],
+    resposta: "Michelangelo",
+    dificuldade: "médio",
+  },
+  {
+    pergunta: "Qual é o maior órgão do corpo humano?",
+    alternativas: ["Fígado", "Coração", "Pele", "Pulmão"],
+    resposta: "Pele",
     dificuldade: "médio",
   },
   {
@@ -145,6 +197,42 @@ export const perguntas = [
     resposta: "Titã",
     dificuldade: "difícil",
   },
+  {
+    pergunta: "Qual é o elemento químico mais abundante no universo?",
+    alternativas: ["Oxigênio", "Hélio", "Carbono", "Hidrogênio"],
+    resposta: "Hidrogênio",
+    dificuldade: "difícil",
+  },
+  {
+    pergunta: "Quem escreveu o romance 'O Som e a Fúria'?",
+    alternativas: ["William Faulkner", "Ernest Hemingway", "F. Scott Fitzgerald", "John Steinbeck"],
+    resposta: "William Faulkner",
+    dificuldade: "difícil",
+  },
+  {
+    pergunta: "Qual é a fórmula para calcular a raiz quadrada de um número em matemática?",
+    alternativas: ["√x", "x²", "x³", "log(x)"],
+    resposta: "√x",
+    dificuldade: "difícil",
+  },
+  {
+    pergunta: "Qual é o nome do primeiro satélite artificial lançado pela União Soviética?",
+    alternativas: ["Sputnik 1", "Vostok 1", "Luna 1", "Mir"],
+    resposta: "Sputnik 1",
+    dificuldade: "difícil",
+  },
+  {
+    pergunta: "Quem foi o primeiro presidente da África do Sul após o fim do apartheid?",
+    alternativas: ["Nelson Mandela", "Thabo Mbeki", "Jacob Zuma", "Cyril Ramaphosa"],
+    resposta: "Nelson Mandela",
+    dificuldade: "difícil",
+  },
+  {
+    pergunta: "Qual é a teoria que explica a origem do universo a partir de uma grande explosão?",
+    alternativas: ["Teoria do Big Bang", "Teoria da Relatividade", "Teoria da Evolução", "Teoria das Cordas"],
+    resposta: "Teoria do Big Bang",
+    dificuldade: "difícil",
+  },  
 ];
 
 // Tabela de valores
