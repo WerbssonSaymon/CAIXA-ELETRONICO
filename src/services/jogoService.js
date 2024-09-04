@@ -209,13 +209,13 @@ export function eliminarAlternativas(
 
     const perguntasEmbaralhadasFaceis = embaralharPerguntas(
       perguntasFaceis
-    ).slice(0, 10);
+    ).slice(0, 4);
     const perguntasEmbaralhadasMedias = embaralharPerguntas(
       perguntasMedias
-    ).slice(0, 7);
+    ).slice(0, 4);
     const perguntasEmbaralhadasDificeis = embaralharPerguntas(
       perguntasDificeis
-    ).slice(0, 5);
+    ).slice(0, 4);
 
     return [
       ...perguntasEmbaralhadasFaceis,

@@ -48,7 +48,9 @@ export default function Jogo() {
       if (selecaoPerguntas.length > 0) {
         setAlternativasEmbaralhadas(
           embaralharPerguntas(selecaoPerguntas[0].alternativas)
+
         );
+        console.log(selecaoPerguntas)
       }
     }
   }, [nome]);
@@ -87,9 +89,11 @@ export default function Jogo() {
             </>
           )}
         </div>
+        
 
-        {!jogoTerminado ? (
-          <div className="bg-body w-75">
+        {nome && !jogoTerminado ? (
+          <div className="d-flex">
+            <div className="bg-body w-75">
             {nome && (
               <div className="bg-primary p-3 d-flex align-items-center justify-content-around">
                 <h3 className="text-white">Partipante: {nome}</h3>
@@ -215,10 +219,23 @@ export default function Jogo() {
               </>
             )}
           </div>
+            <div className="bg-body w-50 p-2" style={{ height: "500px", overflow: "scroll" }}>
+              <ul>
+                <h2>Perguntas desta rodada</h2>
+                {perguntasSelecionadas.map((perguntas, index) => (
+                  <li key={index}>
+                    <p>{perguntas.dificuldade} - {perguntas.pergunta}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>  
+          </div>
+
         ) : (
           <h2>{mensagemFinal}</h2>
         )}
       </div>
+      
       <footer className="w-100 d-flex justify-content-center">
         <button
           className="btn btn-warning w-50"
