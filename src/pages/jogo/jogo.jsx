@@ -17,7 +17,8 @@ import {
   embaralharPerguntas,
   selecionarPerguntas,
   atualizarHistorico,
-  comprarAjuda
+  comprarAjuda,
+  placar
 } from "../../services/jogoService";
 import { calcularSaldo } from "../../services/bancoService";
 
@@ -41,6 +42,7 @@ export default function Jogo() {
   const [loja, setLoja] = useState(false)
   const [botaoCartas, setBotaoCartas] = useState(0);
   const [botaoGrafico, setBotaoGrafico] = useState(0);
+  const [placar,setPlacar] = useState([])
 
   useEffect(() => {
     const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios"));
@@ -48,6 +50,13 @@ export default function Jogo() {
       setListaUsuarios(usuariosSalvos);
     }
   }, []);
+
+  useEffect(() => {
+    const placarSalvo = JSON.parse(localStorage.getItem("placar")) || []
+    if (placarSalvo){
+      setPlacar(placarSalvo)
+    }
+  }, [placar])
 
   useEffect(() => {
     if (nome) {
@@ -70,12 +79,22 @@ export default function Jogo() {
     }
   }, [jogoTerminado]);
 
-  
+
  
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Menu />
       <Title titulo="Show do Milhão" />
+      <h3>Recordes Atuais</h3>
+      <nav className="navbar bg-body-tertiary">
+        <ul className="w-100 d-flex justify-content-start" style={{listStyle: "none"}}>  
+          {placar.map((usuario, index) => (
+            <li key={index} className="mx-2">
+              {index + 1}° {usuario.nome} - {usuario.pontuacao} reais
+            </li>
+          ))}
+        </ul>
+      </nav>
       <div
         className="bg-primary-tertiary d-flex flex-column justify-content-center align-items-center"
         style={{ flex: 1, width: "100vw" }}
@@ -137,6 +156,7 @@ export default function Jogo() {
                       key={index}
                       onClick={() =>
                         verificarResposta(
+                          nome,
                           alternativa,
                           perguntasSelecionadas,
                           perguntaAtual,
@@ -297,6 +317,7 @@ export default function Jogo() {
           className="btn btn-danger w-50 p-3"
           onClick={() =>
             pararJogo(
+              nome,
               valores,
               perguntaAtual,
               setPontuacao,

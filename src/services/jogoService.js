@@ -25,6 +25,7 @@ export function restartarJogo(
   }
 
 export function pararJogo(
+    nome,
     valores,
     perguntaAtual,
     setPontuacao,
@@ -37,6 +38,7 @@ export function pararJogo(
       `Você parou! Seu prêmio final é de ${novaPontuacao} reais.`
     );
     setJogoTerminado(true);
+    placar(nome, novaPontuacao)
     console.log(novaPontuacao);
   }
   
@@ -162,6 +164,7 @@ export function eliminarAlternativas(
  // Logica das perguntas 
 
  export function verificarResposta(
+    nome,
     alternativa,
     perguntasSelecionadas,
     perguntaAtual,
@@ -206,6 +209,7 @@ export function eliminarAlternativas(
           `Parabéns! Você venceu e ganhou ${novaPontuacao} reais.`
         );
         setJogoTerminado(true);
+        placar(nome, novaPontuacao)
       }
     } else {
 
@@ -213,6 +217,7 @@ export function eliminarAlternativas(
       setPontuacao(novaPontuacao);
       setMensagemFinal(`Você errou! Seu prêmio é de ${novaPontuacao} reais.`);
       setJogoTerminado(true);
+      placar(nome, novaPontuacao)
     }
   }
 
@@ -354,4 +359,23 @@ export function atualizarHistorico(
 
   // placar
 
+  export function placar(nomeUsuario, novaPontuacao){
+
+    const placar = JSON.parse(localStorage.getItem("placar")) || []
+
+    const usuarioIndex = placar.findIndex((usuario) => usuario.nome === nomeUsuario)
+    if (usuarioIndex !== -1) {
+      if (placar[usuarioIndex].pontuacao < novaPontuacao){
+        placar[usuarioIndex].pontuacao = novaPontuacao
+      }
+    } else {
+      placar.push({
+        nome: nomeUsuario,
+        pontuacao: novaPontuacao,
+      })
+    }
+
+    placar.sort((a, b) => b.pontuacao - a.pontuacao)
+    localStorage.setItem("placar", JSON.stringify(placar))
+  }
  
