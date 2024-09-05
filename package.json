@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "github": "git add . && git commit -m \" Visualizando as perguntas da rodada \" && git push origin modo-5"
+    "github": "git add . && git commit -m \" Sistema de compra de ajudano page: Jogo \" && git push origin modo-6"
   },
   "dependencies": {
     "chart.js": "^4.4.4",

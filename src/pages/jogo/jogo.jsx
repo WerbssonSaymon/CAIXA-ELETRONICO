@@ -2,13 +2,14 @@ import React from "react";
 import Menu from "../../layout/menu";
 import Title from "../../componentes/title";
 import Grafico from "../../componentes/grafich";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { valores } from "../../data/quests";
 import {
   restartarJogo,
   pararJogo,
   mostrarCartas,
   mostrarGrafico,
+  mostrarLoja,
   pularPergunta,
   eliminarAlternativas,
   obterPerguntaNaoUsada,
@@ -16,12 +17,19 @@ import {
   embaralharPerguntas,
   selecionarPerguntas,
   atualizarHistorico,
+  comprarAjuda
 } from "../../services/jogoService";
+import { calcularSaldo } from "../../services/bancoService";
 
 export default function Jogo() {
+  const refSelectLoja = useRef(null);
+
   const [perguntasSelecionadas, setPerguntasSelecionadas] = useState([]);
   const [perguntaAtual, setPerguntaAtual] = useState(0);
   const [pontuacao, setPontuacao] = useState(0);
+  const [pontuacaoErrar, setPontuacaoErrar] = useState(0);
+  const [pontuacaoParar, setPontuacaoParar] = useState(0);
+  const [pontuacaoAcertar, setPontuacaoAcertar] = useState(0);
   const [jogoTerminado, setJogoTerminado] = useState(false);
   const [mensagemFinal, setMensagemFinal] = useState("");
   const [alternativasEmbaralhadas, setAlternativasEmbaralhadas] = useState([]);
@@ -30,8 +38,9 @@ export default function Jogo() {
   const [cliques, setCliques] = useState(0);
   const [cartas, setCartas] = useState(false);
   const [grafico, setGrafico] = useState(false);
-  const [botaoCartas, setBotaoCartas] = useState(false);
-  const [botaoGrafico, setBotaoGrafico] = useState(false);
+  const [loja, setLoja] = useState(false)
+  const [botaoCartas, setBotaoCartas] = useState(0);
+  const [botaoGrafico, setBotaoGrafico] = useState(0);
 
   useEffect(() => {
     const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios"));
@@ -50,7 +59,6 @@ export default function Jogo() {
           embaralharPerguntas(selecaoPerguntas[0].alternativas)
 
         );
-        console.log(selecaoPerguntas)
       }
     }
   }, [nome]);
@@ -62,14 +70,17 @@ export default function Jogo() {
     }
   }, [jogoTerminado]);
 
+  
+ 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Menu />
+      <Title titulo="Show do Milhão" />
       <div
         className="bg-primary-tertiary d-flex flex-column justify-content-center align-items-center"
         style={{ flex: 1, width: "100vw" }}
       >
-        <Title titulo="Show do Milhão" />
+        
         <div>
           {!nome && (
             <>
@@ -95,14 +106,21 @@ export default function Jogo() {
           <div className="d-flex">
             <div className="bg-body w-75">
             {nome && (
-              <div className="bg-primary p-3 d-flex align-items-center justify-content-around">
-                <h3 className="text-white">Partipante: {nome}</h3>
-                <span className="fs-3 text-white fw-semibold">
-                  {pontuacao.toLocaleString("pt-br", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </span>
+              <div className="bg-primary p-3 d-flex flex-column justify-content-around">
+                <div className="d-flex justify-content-around">
+                  <h3 className="text-white">Partipante: {nome}</h3>
+                  <span className="fs-3 text-white fw-semibold">
+                    {pontuacao.toLocaleString("pt-br", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </span>
+                </div>
+                <div className="d-flex justify-content-around">
+                  <span className="fs-4 text-white fw-semibold">Se errar {pontuacaoErrar}</span>
+                  <span className="fs-4 text-white fw-semibold">Se acertar {pontuacaoAcertar}</span>
+                  <span className="fs-4 text-white fw-semibold">Se parar {pontuacaoParar}</span>
+                </div>
               </div>
             )}
             {perguntasSelecionadas.length > 0 && (
@@ -115,7 +133,7 @@ export default function Jogo() {
                 <div className="d-flex flex-column gap-1 m-1">
                   {alternativasEmbaralhadas.map((alternativa, index) => (
                     <button
-                      className="btn btn-danger p-3 fw-3 w-75 d-flex justify-content-start"
+                      className="btn btn-danger p-3 fw-3 w-75 d-flex align-items-center justify-content-start"
                       key={index}
                       onClick={() =>
                         verificarResposta(
@@ -125,6 +143,9 @@ export default function Jogo() {
                           valores,
                           setPontuacao,
                           setPerguntaAtual,
+                          setPontuacaoErrar,
+                          setPontuacaoParar,
+                          setPontuacaoAcertar,
                           setAlternativasEmbaralhadas,
                           setMensagemFinal,
                           setJogoTerminado,
@@ -132,7 +153,8 @@ export default function Jogo() {
                         )
                       }
                     >
-                      {index + 1} - {alternativa}
+                      <span style={{width: "25px", height: "25px"}} className="fw-bold text-danger bg-white rounded-circle">{index + 1}</span>
+                       - {alternativa}
                     </button>
                   ))}
                 </div>
@@ -158,20 +180,33 @@ export default function Jogo() {
                     Pular
                   </button>
                   <button
-                    className={`btn btn-warning flex-grow-1 `}
+                    className={`btn btn-warning flex-grow-1 ${
+                      botaoCartas >= 1 ? "disabled" : ""
+                    }`}
+                    disabled={botaoCartas >= 1}
                     onClick={() =>
-                      mostrarCartas(cartas, setCartas, setBotaoCartas)
+                      mostrarCartas(
+                        cartas,
+                        setCartas
+                      )
                     }
-                    disabled={botaoCartas}
+                    
                   >
                     Cartas
                   </button>
                   <button
-                    className={`btn btn-warning flex-grow-1`}
-                    onClick={() =>
-                      mostrarGrafico(grafico, setGrafico, setBotaoGrafico)
-                    }
+                    className={`btn btn-warning flex-grow-1 ${
+                      botaoGrafico >= 1 ? "disabled" : ""
+                    }`}
                     disabled={botaoGrafico}
+                    onClick={() =>
+                      mostrarGrafico(
+                        grafico,
+                        setGrafico,
+                        setBotaoGrafico
+                      )
+                    }
+                    
                   >
                     Universitário
                   </button>
@@ -186,7 +221,8 @@ export default function Jogo() {
                           perguntasSelecionadas,
                           perguntaAtual,
                           embaralharPerguntas,
-                          setAlternativasEmbaralhadas
+                          setAlternativasEmbaralhadas,
+                          setBotaoCartas
                         )
                       }
                       className="form-select"
@@ -238,7 +274,7 @@ export default function Jogo() {
       
       <footer className="w-100 d-flex justify-content-center">
         <button
-          className="btn btn-warning w-50"
+          className="btn btn-warning w-50 p-3"
           onClick={() =>
             restartarJogo(
               setPerguntasSelecionadas,
@@ -258,7 +294,7 @@ export default function Jogo() {
           Reiniciar
         </button>
         <button
-          className="btn btn-danger w-50"
+          className="btn btn-danger w-50 p-3"
           onClick={() =>
             pararJogo(
               valores,
@@ -271,7 +307,39 @@ export default function Jogo() {
         >
           Parar
         </button>
+        <button
+          className="btn btn-success w-50 p-3"
+          onClick={() =>
+            mostrarLoja(loja, setLoja)
+          }
+        >
+          Comprar ajuda
+        </button>
       </footer>
+      { loja && (
+        <div>
+          <select
+              ref={refSelectLoja}
+              onChange={(e) =>
+                comprarAjuda(
+                  e.target.value,
+                  nome,
+                  setCliques,
+                  refSelectLoja,
+                  setBotaoCartas,
+                  setBotaoGrafico,
+                  calcularSaldo
+                )
+              }
+            className="form-select form-select-lg border border-primary mb-3"
+          >
+            <option value="">Escolha qual ajuda comprar</option>
+            <option value="pular">+1 ajuda - Pular</option>
+            <option value="cartas">+1 ajuda - Cartas</option>
+            <option value="universitarios">+1 ajuda - Universitarios</option>
+          </select>
+        </div>
+      )}
     </div>
   );
 }

@@ -45,10 +45,8 @@ export function pararJogo(
 export function mostrarCartas(
     cartas,
     setCartas,
-    setBotaoCartas
 ){
-    setCartas(!cartas)
-    setBotaoCartas(true);
+    setCartas(!cartas);
   }
 
 export function mostrarGrafico(
@@ -56,9 +54,16 @@ export function mostrarGrafico(
     setGrafico,
     setBotaoGrafico
 ){
-    setGrafico(!grafico)
-    setBotaoGrafico(true);
+    setGrafico(!grafico);
+    setBotaoGrafico((botaoGrafico) => botaoGrafico + 1);
   }
+
+export function mostrarLoja(
+  loja,
+  setLoja
+){
+  setLoja(!loja)
+}  
 
 export function obterPerguntaNaoUsada(
     dificuldade,
@@ -111,7 +116,8 @@ export function eliminarAlternativas(
     perguntasSelecionadas,
     perguntaAtual,
     embaralharPerguntas,
-    setAlternativasEmbaralhadas
+    setAlternativasEmbaralhadas,
+    setBotaoCartas
 ) {
     let novasAlternativas = [...alternativasEmbaralhadas];
     const alternativaCorreta = perguntasSelecionadas[perguntaAtual].resposta;
@@ -149,6 +155,8 @@ export function eliminarAlternativas(
 
     novasAlternativas = [alternativaCorreta, ...alternativasIncorretas];
     setAlternativasEmbaralhadas(embaralharPerguntas(novasAlternativas));
+
+    setBotaoCartas((botaoCartas) => botaoCartas + 1)
   }
 
  // Logica das perguntas 
@@ -160,6 +168,9 @@ export function eliminarAlternativas(
     valores,
     setPontuacao,
     setPerguntaAtual,
+    setPontuacaoErrar,
+    setPontuacaoParar,
+    setPontuacaoAcertar,
     setAlternativasEmbaralhadas,
     setMensagemFinal,
     setJogoTerminado,
@@ -169,6 +180,18 @@ export function eliminarAlternativas(
       perguntasSelecionadas.length > 0 &&
       alternativa === perguntasSelecionadas[perguntaAtual].resposta
     ) {
+      const pontosSeErrar = valores.errar[perguntaAtual]
+      setPontuacaoErrar(pontosSeErrar)
+      const pontosSeParar = valores.parar[perguntaAtual]
+      setPontuacaoParar(pontosSeParar)
+      const proximaPosicao = perguntaAtual + 1 < valores.acertar.length 
+        ? perguntaAtual + 1 
+        : perguntaAtual;
+
+      const pontosSeAcertar = valores.acertar[proximaPosicao];
+      setPontuacaoAcertar(pontosSeAcertar);
+
+
       const novaPontuacao = valores.acertar[perguntaAtual];
       setPontuacao(novaPontuacao);
       if (perguntaAtual + 1 < perguntasSelecionadas.length) {
@@ -185,6 +208,7 @@ export function eliminarAlternativas(
         setJogoTerminado(true);
       }
     } else {
+
       const novaPontuacao = valores.errar[perguntaAtual];
       setPontuacao(novaPontuacao);
       setMensagemFinal(`Você errou! Seu prêmio é de ${novaPontuacao} reais.`);
@@ -259,3 +283,75 @@ export function atualizarHistorico(
       console.log(localStorage.getItem("usuarios"));
     }
   }
+
+  export function comprarAjuda(e, nomeUsuario, setCliques, refSelectLoja, setBotaoCartas, setBotaoGrafico, calcularSaldo) {
+
+    const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios")) || [];
+    const usuarioIndex = usuariosSalvos.findIndex(
+      (usuario) => usuario.nome === nomeUsuario
+    );
+  
+    if (usuarioIndex === -1) {
+      alert("Usuário não encontrado.");
+      return;
+    }
+  
+    const usuario = usuariosSalvos[usuarioIndex];
+    const saldoAtual = calcularSaldo(nomeUsuario, usuariosSalvos);
+    let valorAjuda;
+  
+    switch (e) {
+      case "pular":
+        valorAjuda = 2500;
+        break;
+      case "cartas":
+        valorAjuda = 3500;
+        break;
+      case "universitarios":
+        valorAjuda = 1500;
+        break;
+      default:
+        return;
+    }
+  
+    const transacaoBemSucedida = saldoAtual >= valorAjuda;
+  
+    if (transacaoBemSucedida) {
+      const novaOperacao = {
+        operacao: "Comprar",
+        valor: valorAjuda,
+        data: new Date().toLocaleString(),
+      };
+  
+      if (!usuario.operacoes) {
+        usuario.operacoes = [];
+      }
+  
+      usuario.operacoes.push(novaOperacao);
+      usuariosSalvos[usuarioIndex] = usuario;
+      localStorage.setItem("usuarios", JSON.stringify(usuariosSalvos));
+  
+      switch (e) {
+        case "pular":
+          setCliques((cliques) => cliques - 1);
+          break;
+        case "cartas":
+          setBotaoCartas((botaoCartas) => botaoCartas - 1);
+          break;
+        case "universitarios":
+          setBotaoGrafico((botaoGrafico) => botaoGrafico - 1);
+      }
+
+      if (refSelectLoja && refSelectLoja.current) {
+        refSelectLoja.current.value = "";
+      }
+  
+      alert("Compra realizada com sucesso.");
+    } else {
+      alert("Saldo insuficiente para essa ajuda.");
+    }
+  }
+
+  // placar
+
+ 

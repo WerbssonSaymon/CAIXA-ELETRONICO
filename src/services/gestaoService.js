@@ -26,6 +26,8 @@ export function calcularSaldo(usuarioNome, listaUsuarios){
         return saldo + o.valor;
       if (o.operacao.startsWith("Jogo")) 
         return saldo + o.valor;
+      if (o.operacao.startsWith("Comprar")) 
+        return saldo - o.valor;
       return saldo = o.valor;
   }, 0);
 };
