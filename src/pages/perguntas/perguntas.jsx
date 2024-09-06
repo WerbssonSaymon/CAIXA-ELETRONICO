@@ -12,6 +12,7 @@ export default function perguntas() {
   const [alternativas, setAlternativas] = useState(['', '', '', '']);
   const [resposta, setResposta] = useState('');
   const [dificuldade, setDificuldade] = useState('');
+  const [categoria, setCategoria] = useState('')
 
   
   console.log(localStorage.getItem('perguntas'))
@@ -65,10 +66,18 @@ export default function perguntas() {
                       <option value="dificil">Difícil</option>
                     </select>
 
+                    <Label text="Digite a categoria"></Label>
+                    <input
+                    className="form-control border border-primary"
+                    type="text"
+                    value={categoria}
+                    onChange={(e) => setCategoria(e.target.value)}
+                    />
+
                     <button
                       className="btn btn-lg btn-success" 
                       onClick={() => cadastrarPergunta(
-                        pergunta, alternativas, resposta, dificuldade, listaDePerguntas, setListaDePerguntas, setPergunta, setAlternativas, setResposta, setDificuldade
+                        pergunta, alternativas, resposta, dificuldade, categoria, setListaDePerguntas, setPergunta, setAlternativas, setResposta, setDificuldade, setCategoria
                       )}>Confirmar
                     </button>
 

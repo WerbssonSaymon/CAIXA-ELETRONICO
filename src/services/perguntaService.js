@@ -14,18 +14,20 @@ export function cadastrarPergunta(
   alternativas,
   resposta,
   dificuldade,
-  listaDePerguntas,
+  categoria,
   setListaDePerguntas,
   setPergunta,
   setAlternativas,
   setResposta,
-  setDificuldade
+  setDificuldade,
+  setCategoria
 ) {
   const novaPergunta = {
     pergunta,
     alternativas,
     resposta,
     dificuldade,
+    categoria,
   };
 
   const perguntasExistentes = JSON.parse(localStorage.getItem('perguntas')) || [];
@@ -40,4 +42,5 @@ export function cadastrarPergunta(
   setAlternativas(["", "", "", ""]);
   setResposta("");
   setDificuldade("");
+  setCategoria("")
 }

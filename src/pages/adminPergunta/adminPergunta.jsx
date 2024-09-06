@@ -70,6 +70,7 @@ export default function adminPergunta() {
 
                 <li className="list-group-item">{p.resposta}</li>
                 <li className="list-group-item">{p.dificuldade}</li>
+                <li className="list-group-item">{p.categoria}</li>
               </ul>
 
               <button
