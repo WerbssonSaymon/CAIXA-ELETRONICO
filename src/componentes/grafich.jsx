@@ -5,6 +5,7 @@ import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
 export default function Grafich() {
+  
   const gerarDadosAleatorios = () => {
     const labels = ['A', 'B', 'C', 'D'];
     const valores = labels.map(() => Math.floor(Math.random() * 100));
@@ -28,7 +29,7 @@ export default function Grafich() {
   };
 
   return (
-    <div className='d-flex align-items-center justify-content-center' style={{ width: '60vw', height: '30vh' }}>
+    <div className='d-flex align-items-center justify-content-center' style={{ width: '300px', height: '300px' }}>
       <Pie data={gerarDadosAleatorios()} />
     </div>
   );

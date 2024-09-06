@@ -2,6 +2,12 @@ import React from "react";
 import Menu from "../../layout/menu";
 import Title from "../../componentes/title";
 import Grafico from "../../componentes/grafich";
+import Rank from "../../componentes/rank";
+import ButtonAction from "../../componentes/buttonAction"
+import ButtonHelp from "../../componentes/buttonHelp"
+import ButtonShop from "../../componentes/buttonShop"
+import Shop from "../../componentes/shop"
+import Cards from "../../componentes/cards"
 import { useState, useEffect, useRef } from "react";
 import { valores } from "../../data/quests";
 import {
@@ -18,7 +24,6 @@ import {
   selecionarPerguntas,
   atualizarHistorico,
   comprarAjuda,
-  placar
 } from "../../services/jogoService";
 import { calcularSaldo } from "../../services/bancoService";
 
@@ -39,10 +44,9 @@ export default function Jogo() {
   const [cliques, setCliques] = useState(0);
   const [cartas, setCartas] = useState(false);
   const [grafico, setGrafico] = useState(false);
-  const [loja, setLoja] = useState(false)
+  const [loja, setLoja] = useState(false);
   const [botaoCartas, setBotaoCartas] = useState(0);
   const [botaoGrafico, setBotaoGrafico] = useState(0);
-  const [placar,setPlacar] = useState([])
 
   useEffect(() => {
     const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios"));
@@ -52,13 +56,6 @@ export default function Jogo() {
   }, []);
 
   useEffect(() => {
-    const placarSalvo = JSON.parse(localStorage.getItem("placar")) || []
-    if (placarSalvo){
-      setPlacar(placarSalvo)
-    }
-  }, [placar])
-
-  useEffect(() => {
     if (nome) {
       const selecaoPerguntas = selecionarPerguntas(embaralharPerguntas);
 
@@ -66,7 +63,6 @@ export default function Jogo() {
       if (selecaoPerguntas.length > 0) {
         setAlternativasEmbaralhadas(
           embaralharPerguntas(selecaoPerguntas[0].alternativas)
-
         );
       }
     }
@@ -79,27 +75,15 @@ export default function Jogo() {
     }
   }, [jogoTerminado]);
 
-
- 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Menu />
       <Title titulo="Show do Milhão" />
-      <h3>Recordes Atuais</h3>
-      <nav className="navbar bg-body-tertiary">
-        <ul className="w-100 d-flex justify-content-start" style={{listStyle: "none"}}>  
-          {placar.map((usuario, index) => (
-            <li key={index} className="mx-2">
-              {index + 1}° {usuario.nome} - {usuario.pontuacao} reais
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <Rank />
       <div
         className="bg-primary-tertiary d-flex flex-column justify-content-center align-items-center"
         style={{ flex: 1, width: "100vw" }}
       >
-        
         <div>
           {!nome && (
             <>
@@ -119,248 +103,222 @@ export default function Jogo() {
             </>
           )}
         </div>
-        
 
         {nome && !jogoTerminado ? (
-          <div className="d-flex">
-            <div className="bg-body w-75">
-            {nome && (
-              <div className="bg-primary p-3 d-flex flex-column justify-content-around">
-                <div className="d-flex justify-content-around">
-                  <h3 className="text-white">Partipante: {nome}</h3>
-                  <span className="fs-3 text-white fw-semibold">
-                    {pontuacao.toLocaleString("pt-br", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
-                  </span>
+          <div className="row">
+            <div className="bg-body col">
+              {nome && (
+                <div className="bg-primary p-3 d-flex flex-column justify-content-around">
+                  <div className="d-flex justify-content-around">
+                    <h3 className="text-white">Partipante: {nome}</h3>
+                    <span className="fs-3 text-white fw-semibold">
+                      {pontuacao.toLocaleString("pt-br", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </span>
+                  </div>
+                  <div className="d-flex justify-content-around">
+                    <span className="fs-4 text-white fw-semibold">
+                      Se errar {pontuacaoErrar}
+                    </span>
+                    <span className="fs-4 text-white fw-semibold">
+                      Se acertar {pontuacaoAcertar}
+                    </span>
+                    <span className="fs-4 text-white fw-semibold">
+                      Se parar {pontuacaoParar}
+                    </span>
+                  </div>
                 </div>
-                <div className="d-flex justify-content-around">
-                  <span className="fs-4 text-white fw-semibold">Se errar {pontuacaoErrar}</span>
-                  <span className="fs-4 text-white fw-semibold">Se acertar {pontuacaoAcertar}</span>
-                  <span className="fs-4 text-white fw-semibold">Se parar {pontuacaoParar}</span>
-                </div>
-              </div>
-            )}
-            {perguntasSelecionadas.length > 0 && (
-              <>
-                <div className="bg-danger p-3">
-                  <h2 className="text-white">
-                    {perguntasSelecionadas[perguntaAtual].pergunta}
-                  </h2>
-                </div>
-                <div className="d-flex flex-column gap-1 m-1">
-                  {alternativasEmbaralhadas.map((alternativa, index) => (
-                    <button
-                      className="btn btn-danger p-3 fw-3 w-75 d-flex align-items-center justify-content-start"
-                      key={index}
-                      onClick={() =>
-                        verificarResposta(
-                          nome,
-                          alternativa,
-                          perguntasSelecionadas,
-                          perguntaAtual,
-                          valores,
-                          setPontuacao,
-                          setPerguntaAtual,
-                          setPontuacaoErrar,
-                          setPontuacaoParar,
-                          setPontuacaoAcertar,
-                          setAlternativasEmbaralhadas,
-                          setMensagemFinal,
-                          setJogoTerminado,
-                          embaralharPerguntas
-                        )
-                      }
-                    >
-                      <span style={{width: "25px", height: "25px"}} className="fw-bold text-danger bg-white rounded-circle">{index + 1}</span>
-                       - {alternativa}
-                    </button>
-                  ))}
-                </div>
+              )}
+              {perguntasSelecionadas.length > 0 && (
+                <>
+                  <div className="bg-danger p-3">
+                    <h2 className="text-white">
+                      {perguntasSelecionadas[perguntaAtual].pergunta}
+                    </h2>
+                  </div>
+                  <div className="d-flex flex-column gap-1 m-1">
+                    {alternativasEmbaralhadas.map((alternativa, index) => (
+                      <button
+                        className="btn btn-danger p-3 fw-3 w-75 d-flex align-items-center justify-content-start"
+                        key={index}
+                        onClick={() =>
+                          verificarResposta(
+                            nome,
+                            alternativa,
+                            perguntasSelecionadas,
+                            perguntaAtual,
+                            valores,
+                            setPontuacao,
+                            setPerguntaAtual,
+                            setPontuacaoErrar,
+                            setPontuacaoParar,
+                            setPontuacaoAcertar,
+                            setAlternativasEmbaralhadas,
+                            setMensagemFinal,
+                            setJogoTerminado,
+                            embaralharPerguntas
+                          )
+                        }
+                      >
+                        <span
+                          style={{ width: "25px", height: "25px" }}
+                          className="fw-bold text-danger bg-white rounded-circle"
+                        >
+                          {index + 1}
+                        </span>
+                        - {alternativa}
+                      </button>
+                    ))}
+                  </div>
 
-                <div className="d-flex gap-1 m-2 pt-3">
-                  <button
-                    className={`btn btn-warning flex-grow-1 ${
-                      cliques >= 3 ? "disabled" : ""
-                    }`}
-                    disabled={cliques >= 3}
-                    onClick={() =>
-                      pularPergunta(
-                        perguntasSelecionadas,
-                        perguntaAtual,
-                        obterPerguntaNaoUsada,
-                        embaralharPerguntas,
-                        setAlternativasEmbaralhadas,
-                        setPerguntasSelecionadas,
-                        setCliques
-                      )
-                    }
-                  >
-                    Pular
-                  </button>
-                  <button
-                    className={`btn btn-warning flex-grow-1 ${
-                      botaoCartas >= 1 ? "disabled" : ""
-                    }`}
-                    disabled={botaoCartas >= 1}
-                    onClick={() =>
-                      mostrarCartas(
-                        cartas,
-                        setCartas
-                      )
-                    }
-                    
-                  >
-                    Cartas
-                  </button>
-                  <button
-                    className={`btn btn-warning flex-grow-1 ${
-                      botaoGrafico >= 1 ? "disabled" : ""
-                    }`}
-                    disabled={botaoGrafico}
-                    onClick={() =>
-                      mostrarGrafico(
-                        grafico,
-                        setGrafico,
-                        setBotaoGrafico
-                      )
-                    }
-                    
-                  >
-                    Universitário
-                  </button>
-                </div>
-                {cartas && (
-                  <div className="w-100 d-flex flex-column align-items-center justify-content-center">
-                    <select
-                      onChange={(e) =>
-                        eliminarAlternativas(
-                          e.target.value,
-                          alternativasEmbaralhadas,
-                          perguntasSelecionadas,
-                          perguntaAtual,
-                          embaralharPerguntas,
-                          setAlternativasEmbaralhadas,
-                          setBotaoCartas
-                        )
-                      }
-                      className="form-select"
-                    >
-                      <option value="">Escolha uma carta</option>
-                      <option value="rei">X</option>
-                      <option value="ás">X</option>
-                      <option value="2">X</option>
-                      <option value="3">X</option>
-                    </select>
-                    <button
-                      className="btn btn-danger text-white flex-grow-1"
-                      onClick={() => setCartas(false)}
-                    >
-                      X
-                    </button>
-                  </div>
-                )}
-                {grafico && (
-                  <div className="w-100 d-flex flex-column align-items-center justify-content-center">
-                    <Grafico />
-                    <button
-                      className="btn btn-danger text-white flex-grow-1"
-                      onClick={() => setGrafico(false)}
-                    >
-                      X
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-            <div className="bg-body w-50 p-2" style={{ height: "500px", overflow: "scroll" }}>
+                </>
+              )}
+            </div>
+            <div className="bg-body col" style={{ overflow: "scroll" }}>
               <ul>
                 <h2>Perguntas desta rodada</h2>
                 {perguntasSelecionadas.map((perguntas, index) => (
                   <li key={index}>
-                    <p>{perguntas.dificuldade} - {perguntas.pergunta}</p>
+                    <p>
+                      {perguntas.dificuldade} - {perguntas.pergunta}
+                    </p>
                   </li>
                 ))}
               </ul>
-            </div>  
-          </div>
+            </div>
+            <div className="bg-body col d-flex flex-column justify-content-end">
+            {cartas && (
+                    <div className="w-100 d-flex flex-column align-items-center justify-content-center">
+                      <Cards
+                        label="Escolha uma cartas"
+                        onChange={(e) =>
+                          eliminarAlternativas(
+                            e.target.value,
+                            alternativasEmbaralhadas,
+                            perguntasSelecionadas,
+                            perguntaAtual,
+                            embaralharPerguntas,
+                            setAlternativasEmbaralhadas,
+                            setBotaoCartas
+                          )}
+                      />
+                      <button
+                        className="btn btn-danger text-white flex-grow-1"
+                        onClick={() => setCartas(false)}
+                      >
+                        X
+                      </button>
+                    </div>
+                  )}
+                  {grafico && (
+                    <div className="w-100 d-flex flex-column align-items-center justify-content-center">
+                      <Grafico />
+                      <button
+                        className="btn btn-danger text-white flex-grow-1"
+                        onClick={() => setGrafico(false)}
+                      >
+                        X
+                      </button>
+                    </div>
+                  )}
+              {loja && (
+                <Shop
+                  refSelectLoja={refSelectLoja}
+                  label="Escolha qual ajuda comprar"
+                  onChange={(e) =>
+                    comprarAjuda(
+                      e.target.value,
+                      nome,
+                      setCliques,
+                      refSelectLoja,
+                      setBotaoCartas,
+                      setBotaoGrafico,
+                      calcularSaldo
+                    )
+                  }
+                />
+              )}
+              <div className="d-flex gap-1 m-2 pt-3">
+                <ButtonShop
+                  label="Comprar ajuda"
+                  onClick={() => mostrarLoja(loja, setLoja)}
+                />
 
+                <ButtonHelp
+                  label="Pular"
+                  botaoEstado={cliques >= 3}
+                  onClick={() =>
+                    pularPergunta(
+                      perguntasSelecionadas,
+                      perguntaAtual,
+                      obterPerguntaNaoUsada,
+                      embaralharPerguntas,
+                      setAlternativasEmbaralhadas,
+                      setPerguntasSelecionadas,
+                      setCliques
+                    )
+                  }
+                />
+                 
+
+                <ButtonHelp
+                  label="Cartas"
+                  botaoEstado={botaoCartas >= 1}
+                  onClick={() => mostrarCartas(cartas, setCartas)}
+                />
+                    
+                <ButtonHelp
+                  label="Universitário"
+                  botaoEstado={botaoGrafico}
+                  onClick={() =>
+                    mostrarGrafico(grafico, setGrafico, setBotaoGrafico)
+                  }
+                />
+
+              </div>
+            </div>
+          </div>
         ) : (
           <h2>{mensagemFinal}</h2>
         )}
+        <footer className="w-100 d-flex justify-content-center gap-3 py-2">
+          <ButtonAction
+            label="Reiniciar"
+            cor="warning"
+            onClick={() =>
+              restartarJogo(
+                setPerguntasSelecionadas,
+                setPerguntaAtual,
+                setPontuacao,
+                setJogoTerminado,
+                setMensagemFinal,
+                setAlternativasEmbaralhadas,
+                setNome,
+                setCliques,
+                setGrafico,
+                setBotaoCartas,
+                setBotaoGrafico
+              )
+            }
+          />
+          <ButtonAction
+            label="Parar"
+            cor="danger"
+            onClick={() => {
+              pararJogo(
+                nome,
+                valores,
+                perguntaAtual,
+                setPontuacao,
+                setMensagemFinal,
+                setJogoTerminado
+              )
+            }}
+          />
+        </footer>
       </div>
-      
-      <footer className="w-100 d-flex justify-content-center">
-        <button
-          className="btn btn-warning w-50 p-3"
-          onClick={() =>
-            restartarJogo(
-              setPerguntasSelecionadas,
-              setPerguntaAtual,
-              setPontuacao,
-              setJogoTerminado,
-              setMensagemFinal,
-              setAlternativasEmbaralhadas,
-              setNome,
-              setCliques,
-              setGrafico,
-              setBotaoCartas,
-              setBotaoGrafico
-            )
-          }
-        >
-          Reiniciar
-        </button>
-        <button
-          className="btn btn-danger w-50 p-3"
-          onClick={() =>
-            pararJogo(
-              nome,
-              valores,
-              perguntaAtual,
-              setPontuacao,
-              setMensagemFinal,
-              setJogoTerminado
-            )
-          }
-        >
-          Parar
-        </button>
-        <button
-          className="btn btn-success w-50 p-3"
-          onClick={() =>
-            mostrarLoja(loja, setLoja)
-          }
-        >
-          Comprar ajuda
-        </button>
-      </footer>
-      { loja && (
-        <div>
-          <select
-              ref={refSelectLoja}
-              onChange={(e) =>
-                comprarAjuda(
-                  e.target.value,
-                  nome,
-                  setCliques,
-                  refSelectLoja,
-                  setBotaoCartas,
-                  setBotaoGrafico,
-                  calcularSaldo
-                )
-              }
-            className="form-select form-select-lg border border-primary mb-3"
-          >
-            <option value="">Escolha qual ajuda comprar</option>
-            <option value="pular">+1 ajuda - Pular</option>
-            <option value="cartas">+1 ajuda - Cartas</option>
-            <option value="universitarios">+1 ajuda - Universitarios</option>
-          </select>
-        </div>
-      )}
     </div>
   );
 }

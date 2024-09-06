@@ -20,8 +20,8 @@ export function restartarJogo(
     setNome("");
     setCliques(0);
     setGrafico(false);
-    setBotaoCartas(false)
-    setBotaoGrafico(false)
+    setBotaoCartas(0)
+    setBotaoGrafico(0)
   }
 
 export function pararJogo(
