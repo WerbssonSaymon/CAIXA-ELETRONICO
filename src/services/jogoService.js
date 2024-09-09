@@ -10,7 +10,8 @@ export function restartarJogo(
     setCliques,
     setGrafico,
     setBotaoCartas,
-    setBotaoGrafico
+    setBotaoGrafico,
+    setIniciar
 ) {
     setPerguntasSelecionadas([]);
     setCategoriasSelecionadas([]);
@@ -24,6 +25,7 @@ export function restartarJogo(
     setGrafico(false);
     setBotaoCartas(0)
     setBotaoGrafico(0)
+    setIniciar(false)
   }
 
 export function pararJogo(
@@ -43,6 +45,12 @@ export function pararJogo(
     placar(nome, novaPontuacao)
     console.log(novaPontuacao);
   }
+
+export function iniciarJogo(
+  setIniciar
+){
+  setIniciar(true)
+}  
 
 export function mudarCategoria(
   categoria,
@@ -96,6 +104,36 @@ export function obterPerguntaNaoUsada(
 
     return embaralharPerguntas(perguntasDaMesmaDificuldade)[0];
   }
+
+// Função que adiciona uma nova pergunta não usada
+export function perguntaSecreta(
+  perguntaAtual,
+  perguntasSelecionadas,
+  obterPerguntaNaoUsada,
+  embaralharPerguntas,
+  setPerguntasSelecionadas,
+  setAlternativasEmbaralhadas
+) {
+  if (perguntasSelecionadas.length > 0) {
+    const dificuldadeAtual = perguntasSelecionadas[perguntaAtual].dificuldade;
+    const novaPergunta = obterPerguntaNaoUsada(
+      dificuldadeAtual,
+      perguntasSelecionadas,
+      embaralharPerguntas
+    );
+    if (novaPergunta) {
+      setAlternativasEmbaralhadas(
+        embaralharPerguntas(novaPergunta.alternativas)
+      );
+      setPerguntasSelecionadas((perguntas) => {
+        const novasPerguntas = [...perguntas];
+        novasPerguntas[perguntaAtual] = novaPergunta;
+
+        return novasPerguntas;
+      });
+    }
+  }
+}
 
 export function pularPergunta(
     perguntasSelecionadas,
@@ -192,8 +230,9 @@ export function eliminarAlternativas(
     setAlternativasEmbaralhadas,
     setMensagemFinal,
     setJogoTerminado,
-    embaralharPerguntas,
+    embaralharPerguntas
 ) {
+
     if (
       perguntasSelecionadas.length > 0 &&
       alternativa === perguntasSelecionadas[perguntaAtual].resposta
@@ -202,7 +241,7 @@ export function eliminarAlternativas(
       setPontuacaoErrar(pontosSeErrar)
       const pontosSeParar = valores.parar[perguntaAtual]
       setPontuacaoParar(pontosSeParar)
-      const proximaPosicao = perguntaAtual + 1 < valores.acertar.length 
+      const proximaPosicao = perguntaAtual + 1 < valoresAtualizados.acertar.length 
         ? perguntaAtual + 1 
         : perguntaAtual;
 

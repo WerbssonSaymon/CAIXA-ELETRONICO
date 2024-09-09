@@ -10,6 +10,7 @@ import Shop from "../../componentes/shop";
 import Cards from "../../componentes/cards";
 import AreaPoints from "../../componentes/areaPoints";
 import CategoryButton from "../../componentes/categoryButton";
+import AreaUser from '../../componentes/areaUser'
 import { useState, useEffect, useRef } from "react";
 import { valores } from "../../data/quests";
 import {
@@ -27,6 +28,8 @@ import {
   atualizarHistorico,
   comprarAjuda,
   mudarCategoria,
+  iniciarJogo,
+  perguntaSecreta
 } from "../../services/jogoService";
 import { calcularSaldo } from "../../services/bancoService";
 
@@ -51,6 +54,7 @@ export default function Jogo() {
   const [loja, setLoja] = useState(false);
   const [botaoCartas, setBotaoCartas] = useState(0);
   const [botaoGrafico, setBotaoGrafico] = useState(0);
+  const [iniciar, setIniciar] = useState(false)
 
   useEffect(() => {
     const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios"));
@@ -60,7 +64,7 @@ export default function Jogo() {
   }, []);
 
   useEffect(() => {
-    if (nome) {
+    if (nome && iniciar === true) {
       const selecaoPerguntas = selecionarPerguntas(
         embaralharPerguntas,
         categoriasSelecionadas
@@ -73,7 +77,7 @@ export default function Jogo() {
         );
       }
     }
-  }, [nome, categoriasSelecionadas]);
+  }, [nome, iniciar, categoriasSelecionadas]);
 
   useEffect(() => {
     if (jogoTerminado) {
@@ -88,14 +92,14 @@ export default function Jogo() {
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Menu />
       <Title titulo="Show do Milhão" />
-      {nome && <Rank />}
+      {iniciar === true && <Rank />}
 
       <div
         className="bg-primary-tertiary d-flex flex-column justify-content-center align-items-center"
         style={{ flex: 1, width: "100vw" }}
       >
         
-        {!nome && (
+        {iniciar === false && (
           <>
             <CategoryButton
               mudarCategoria={mudarCategoria}
@@ -105,30 +109,21 @@ export default function Jogo() {
            
         )}       
           <div>
-          {!nome && (
-            <>
-              
-              <h2 className="text-center my-4">Selecione um Usuário</h2>
-              <select
-                className="form-select form-select-lg border border-primary"
-                onChange={(e) => setNome(e.target.value)}
-                value={nome}
-              >
-                <option value="">Selecione um jogador</option>
-                {listaUsuarios.map((usuario, index) => (
-                  <option key={index} value={usuario.nome}>
-                    {usuario.nome}
-                  </option>
-                ))}
-              </select>
-            </>
+          {iniciar === false && (         
+              <AreaUser
+                nome={nome}
+                setNome={setNome}
+                listaUsuarios={listaUsuarios}
+                iniciarJogo={iniciarJogo}
+                setIniciar={setIniciar}
+              />
           )}
         </div>
 
-        {nome && !jogoTerminado ? (
+        {iniciar === true && !jogoTerminado ? (
           <div className="row">
             <div className="bg-body col">
-              {nome && (
+              {iniciar === true && (
                 <div className="bg-primary p-3 d-flex flex-column justify-content-around">
                   <div className="d-flex justify-content-around">
                     <h3 className="text-white">Partipante: {nome}</h3>
@@ -287,6 +282,22 @@ export default function Jogo() {
                     mostrarGrafico(grafico, setGrafico, setBotaoGrafico)
                   }
                 />
+
+                <button
+                  className="btn btn-lg btn-primary"
+                  onClick={() =>
+                    perguntaSecreta(
+                      perguntaAtual,
+                      perguntasSelecionadas,
+                      obterPerguntaNaoUsada,
+                      embaralharPerguntas,
+                      setPerguntasSelecionadas,
+                      setAlternativasEmbaralhadas
+                    )
+                  }
+                >
+                  Adicionar Pergunta Secreta
+                </button>
               </div>
             </div>
           </div>
@@ -310,7 +321,8 @@ export default function Jogo() {
                 setCliques,
                 setGrafico,
                 setBotaoCartas,
-                setBotaoGrafico
+                setBotaoGrafico,
+                setIniciar
               )
             }
           />
