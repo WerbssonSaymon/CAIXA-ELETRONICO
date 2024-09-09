@@ -9,6 +9,7 @@ import ButtonShop from "../../componentes/buttonShop";
 import Shop from "../../componentes/shop";
 import Cards from "../../componentes/cards";
 import AreaPoints from "../../componentes/areaPoints";
+import CategoryButton from "../../componentes/categoryButton";
 import { useState, useEffect, useRef } from "react";
 import { valores } from "../../data/quests";
 import {
@@ -25,6 +26,7 @@ import {
   selecionarPerguntas,
   atualizarHistorico,
   comprarAjuda,
+  mudarCategoria,
 } from "../../services/jogoService";
 import { calcularSaldo } from "../../services/bancoService";
 
@@ -80,15 +82,7 @@ export default function Jogo() {
     }
   }, [jogoTerminado]);
 
-  function mudarCategoria(categoria) {
-    setCategoriasSelecionadas((categoriaEscolhida) => {
-      if (categoriaEscolhida.includes(categoria)) {
-        return categoriaEscolhida.filter((escolha) => escolha !== categoria);
-      } else {
-        return [...categoriaEscolhida, categoria];
-      }
-    });
-  }
+  
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
@@ -103,28 +97,10 @@ export default function Jogo() {
         
         {!nome && (
           <>
-            <h2 className="text-center">Escolha as categorias</h2>
-            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-              <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off" value="matematica"
-              onChange={() => mudarCategoria("matematica")}/>
-              <label class="btn btn-outline-light" for="btncheck1">Matematica</label>
-
-              <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off" value="portugues"
-              onChange={() => mudarCategoria("portugues")}/>
-              <label class="btn btn-outline-light" for="btncheck2">Portugues</label>
-
-              <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off" value="ciencia"
-              onChange={() => mudarCategoria("ciencia")}/>
-              <label class="btn btn-outline-light" for="btncheck3">Ciencia</label>
-
-              <input type="checkbox" class="btn-check" id="btncheck4" autocomplete="off" value="historia"
-              onChange={() => mudarCategoria("historia")}/>
-              <label class="btn btn-outline-light" for="btncheck4">Historia</label>
-
-              <input type="checkbox" class="btn-check" id="btncheck5" autocomplete="off" value="geografia"
-              onChange={() => mudarCategoria("geografia")}/>
-              <label class="btn btn-outline-light" for="btncheck5">Geografia</label>
-            </div>
+            <CategoryButton
+              mudarCategoria={mudarCategoria}
+              setCategoriasSelecionadas={setCategoriasSelecionadas}
+            />
           </>
            
         )}       

@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "github": "git add . && git commit -m \" Funcionalidade de escolha de categoria \" && git push origin modo-6"
+    "github": "git add . && git commit -m \" Desacoplamento e componentização do botão de categorias \" && git push origin modo-6"
   },
   "dependencies": {
     "chart.js": "^4.4.4",

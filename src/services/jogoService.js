@@ -43,6 +43,19 @@ export function pararJogo(
     placar(nome, novaPontuacao)
     console.log(novaPontuacao);
   }
+
+export function mudarCategoria(
+  categoria,
+  setCategoriasSelecionadas
+) {
+  setCategoriasSelecionadas((categoriaEscolhida) => {
+    if (categoriaEscolhida.includes(categoria)) {
+      return categoriaEscolhida.filter((escolha) => escolha !== categoria);
+    } else {
+      return [...categoriaEscolhida, categoria];
+    }
+  });
+}  
   
 // Ajudas do jogo
 
