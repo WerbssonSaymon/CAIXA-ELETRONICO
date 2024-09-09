@@ -3,11 +3,12 @@ import Menu from "../../layout/menu";
 import Title from "../../componentes/title";
 import Grafico from "../../componentes/grafich";
 import Rank from "../../componentes/rank";
-import ButtonAction from "../../componentes/buttonAction"
-import ButtonHelp from "../../componentes/buttonHelp"
-import ButtonShop from "../../componentes/buttonShop"
-import Shop from "../../componentes/shop"
-import Cards from "../../componentes/cards"
+import ButtonAction from "../../componentes/buttonAction";
+import ButtonHelp from "../../componentes/buttonHelp";
+import ButtonShop from "../../componentes/buttonShop";
+import Shop from "../../componentes/shop";
+import Cards from "../../componentes/cards";
+import AreaPoints from "../../componentes/areaPoints";
 import { useState, useEffect, useRef } from "react";
 import { valores } from "../../data/quests";
 import {
@@ -30,6 +31,7 @@ import { calcularSaldo } from "../../services/bancoService";
 export default function Jogo() {
   const refSelectLoja = useRef(null);
 
+  const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
   const [perguntasSelecionadas, setPerguntasSelecionadas] = useState([]);
   const [perguntaAtual, setPerguntaAtual] = useState(0);
   const [pontuacao, setPontuacao] = useState(0);
@@ -57,7 +59,10 @@ export default function Jogo() {
 
   useEffect(() => {
     if (nome) {
-      const selecaoPerguntas = selecionarPerguntas(embaralharPerguntas);
+      const selecaoPerguntas = selecionarPerguntas(
+        embaralharPerguntas,
+        categoriasSelecionadas
+      );
 
       setPerguntasSelecionadas(selecaoPerguntas);
       if (selecaoPerguntas.length > 0) {
@@ -66,7 +71,7 @@ export default function Jogo() {
         );
       }
     }
-  }, [nome]);
+  }, [nome, categoriasSelecionadas]);
 
   useEffect(() => {
     if (jogoTerminado) {
@@ -75,19 +80,59 @@ export default function Jogo() {
     }
   }, [jogoTerminado]);
 
+  function mudarCategoria(categoria) {
+    setCategoriasSelecionadas((categoriaEscolhida) => {
+      if (categoriaEscolhida.includes(categoria)) {
+        return categoriaEscolhida.filter((escolha) => escolha !== categoria);
+      } else {
+        return [...categoriaEscolhida, categoria];
+      }
+    });
+  }
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Menu />
       <Title titulo="Show do Milhão" />
-      <Rank />
+      {nome && <Rank />}
+
       <div
         className="bg-primary-tertiary d-flex flex-column justify-content-center align-items-center"
         style={{ flex: 1, width: "100vw" }}
       >
-        <div>
+        
+        {!nome && (
+          <>
+            <h2 className="text-center">Escolha as categorias</h2>
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+              <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off" value="matematica"
+              onChange={() => mudarCategoria("matematica")}/>
+              <label class="btn btn-outline-light" for="btncheck1">Matematica</label>
+
+              <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off" value="portugues"
+              onChange={() => mudarCategoria("portugues")}/>
+              <label class="btn btn-outline-light" for="btncheck2">Portugues</label>
+
+              <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off" value="ciencia"
+              onChange={() => mudarCategoria("ciencia")}/>
+              <label class="btn btn-outline-light" for="btncheck3">Ciencia</label>
+
+              <input type="checkbox" class="btn-check" id="btncheck4" autocomplete="off" value="historia"
+              onChange={() => mudarCategoria("historia")}/>
+              <label class="btn btn-outline-light" for="btncheck4">Historia</label>
+
+              <input type="checkbox" class="btn-check" id="btncheck5" autocomplete="off" value="geografia"
+              onChange={() => mudarCategoria("geografia")}/>
+              <label class="btn btn-outline-light" for="btncheck5">Geografia</label>
+            </div>
+          </>
+           
+        )}       
+          <div>
           {!nome && (
             <>
-              <h2>Selecione um Usuário</h2>
+              
+              <h2 className="text-center my-4">Selecione um Usuário</h2>
               <select
                 className="form-select form-select-lg border border-primary"
                 onChange={(e) => setNome(e.target.value)}
@@ -118,17 +163,8 @@ export default function Jogo() {
                       })}
                     </span>
                   </div>
-                  <div className="d-flex justify-content-around">
-                    <span className="fs-4 text-white fw-semibold">
-                      Se errar {pontuacaoErrar}
-                    </span>
-                    <span className="fs-4 text-white fw-semibold">
-                      Se acertar {pontuacaoAcertar}
-                    </span>
-                    <span className="fs-4 text-white fw-semibold">
-                      Se parar {pontuacaoParar}
-                    </span>
-                  </div>
+                  <AreaPoints valores={valores} perguntaAtual={perguntaAtual}/>
+
                 </div>
               )}
               {perguntasSelecionadas.length > 0 && (
@@ -172,7 +208,6 @@ export default function Jogo() {
                       </button>
                     ))}
                   </div>
-
                 </>
               )}
             </div>
@@ -189,40 +224,41 @@ export default function Jogo() {
               </ul>
             </div>
             <div className="bg-body col d-flex flex-column justify-content-end">
-            {cartas && (
-                    <div className="w-100 d-flex flex-column align-items-center justify-content-center">
-                      <Cards
-                        label="Escolha uma cartas"
-                        onChange={(e) =>
-                          eliminarAlternativas(
-                            e.target.value,
-                            alternativasEmbaralhadas,
-                            perguntasSelecionadas,
-                            perguntaAtual,
-                            embaralharPerguntas,
-                            setAlternativasEmbaralhadas,
-                            setBotaoCartas
-                          )}
-                      />
-                      <button
-                        className="btn btn-danger text-white flex-grow-1"
-                        onClick={() => setCartas(false)}
-                      >
-                        X
-                      </button>
-                    </div>
-                  )}
-                  {grafico && (
-                    <div className="w-100 d-flex flex-column align-items-center justify-content-center">
-                      <Grafico />
-                      <button
-                        className="btn btn-danger text-white flex-grow-1"
-                        onClick={() => setGrafico(false)}
-                      >
-                        X
-                      </button>
-                    </div>
-                  )}
+              {cartas && (
+                <div className="w-100 d-flex flex-column align-items-center justify-content-center">
+                  <Cards
+                    label="Escolha uma cartas"
+                    onChange={(e) =>
+                      eliminarAlternativas(
+                        e.target.value,
+                        alternativasEmbaralhadas,
+                        perguntasSelecionadas,
+                        perguntaAtual,
+                        embaralharPerguntas,
+                        setAlternativasEmbaralhadas,
+                        setBotaoCartas
+                      )
+                    }
+                  />
+                  <button
+                    className="btn btn-danger text-white flex-grow-1"
+                    onClick={() => setCartas(false)}
+                  >
+                    X
+                  </button>
+                </div>
+              )}
+              {grafico && (
+                <div className="w-100 d-flex flex-column align-items-center justify-content-center">
+                  <Grafico />
+                  <button
+                    className="btn btn-danger text-white flex-grow-1"
+                    onClick={() => setGrafico(false)}
+                  >
+                    X
+                  </button>
+                </div>
+              )}
               {loja && (
                 <Shop
                   refSelectLoja={refSelectLoja}
@@ -261,14 +297,13 @@ export default function Jogo() {
                     )
                   }
                 />
-                 
 
                 <ButtonHelp
                   label="Cartas"
                   botaoEstado={botaoCartas >= 1}
                   onClick={() => mostrarCartas(cartas, setCartas)}
                 />
-                    
+
                 <ButtonHelp
                   label="Universitário"
                   botaoEstado={botaoGrafico}
@@ -276,7 +311,6 @@ export default function Jogo() {
                     mostrarGrafico(grafico, setGrafico, setBotaoGrafico)
                   }
                 />
-
               </div>
             </div>
           </div>
@@ -290,6 +324,7 @@ export default function Jogo() {
             onClick={() =>
               restartarJogo(
                 setPerguntasSelecionadas,
+                setCategoriasSelecionadas,
                 setPerguntaAtual,
                 setPontuacao,
                 setJogoTerminado,
@@ -314,7 +349,7 @@ export default function Jogo() {
                 setPontuacao,
                 setMensagemFinal,
                 setJogoTerminado
-              )
+              );
             }}
           />
         </footer>

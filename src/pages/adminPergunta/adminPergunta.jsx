@@ -60,13 +60,13 @@ export default function adminPergunta() {
               <ul className="list-group ">
                 <li className="list-group-item">{p.pergunta}</li>
 
-                <div>
+                <li className="list-group-item">
                     {p.alternativas.map((alt, index) => (
                     <span key={index}>
-                        {" " + alt} 
+                        {" " + alt} -
                     </span>
                     ))}
-                </div>
+                </li>
 
                 <li className="list-group-item">{p.resposta}</li>
                 <li className="list-group-item">{p.dificuldade}</li>

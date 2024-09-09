@@ -1,5 +1,6 @@
 export function restartarJogo(
     setPerguntasSelecionadas,
+    setCategoriasSelecionadas,
     setPerguntaAtual,
     setPontuacao,
     setJogoTerminado,
@@ -12,6 +13,7 @@ export function restartarJogo(
     setBotaoGrafico
 ) {
     setPerguntasSelecionadas([]);
+    setCategoriasSelecionadas([]);
     setPerguntaAtual(0);
     setPontuacao(0);
     setJogoTerminado(false);
@@ -226,13 +228,21 @@ export function eliminarAlternativas(
   }
 
   export function selecionarPerguntas(
-    embaralharPerguntas
+    embaralharPerguntas,
+    categoriasSelecionadas
   ) {
     const perguntas = JSON.parse(localStorage.getItem("perguntas"));
 
-    const perguntasFaceis = perguntas.filter((p) => p.dificuldade === "fácil");
-    const perguntasMedias = perguntas.filter((p) => p.dificuldade === "médio");
-    const perguntasDificeis = perguntas.filter(
+    if(!perguntas)
+      return [];
+
+    const perguntasCategorias = perguntas.filter((p) =>
+      categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(p.categoria)
+    )
+
+    const perguntasFaceis = perguntasCategorias.filter((p) => p.dificuldade === "fácil");
+    const perguntasMedias = perguntasCategorias.filter((p) => p.dificuldade === "médio");
+    const perguntasDificeis = perguntasCategorias.filter(
       (p) => p.dificuldade === "difícil"
     );
 
