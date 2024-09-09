@@ -127,8 +127,8 @@ export function perguntaSecreta(
       );
       setPerguntasSelecionadas((perguntas) => {
         const novasPerguntas = [...perguntas];
+        
         novasPerguntas[perguntaAtual] = novaPergunta;
-
         return novasPerguntas;
       });
     }
@@ -241,7 +241,7 @@ export function eliminarAlternativas(
       setPontuacaoErrar(pontosSeErrar)
       const pontosSeParar = valores.parar[perguntaAtual]
       setPontuacaoParar(pontosSeParar)
-      const proximaPosicao = perguntaAtual + 1 < valoresAtualizados.acertar.length 
+      const proximaPosicao = perguntaAtual + 1 < valores.acertar.length 
         ? perguntaAtual + 1 
         : perguntaAtual;
 

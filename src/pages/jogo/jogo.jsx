@@ -10,7 +10,7 @@ import Shop from "../../componentes/shop";
 import Cards from "../../componentes/cards";
 import AreaPoints from "../../componentes/areaPoints";
 import CategoryButton from "../../componentes/categoryButton";
-import AreaUser from '../../componentes/areaUser'
+import AreaUser from "../../componentes/areaUser";
 import { useState, useEffect, useRef } from "react";
 import { valores } from "../../data/quests";
 import {
@@ -29,9 +29,15 @@ import {
   comprarAjuda,
   mudarCategoria,
   iniciarJogo,
-  perguntaSecreta
+  perguntaSecreta,
 } from "../../services/jogoService";
 import { calcularSaldo } from "../../services/bancoService";
+import {
+  iniciarTreinamento,
+  verificarRespostaTreino,
+  selecionarPerguntasTreino,
+  sairTreinamento
+} from "../../services/treinamentoService";
 
 export default function Jogo() {
   const refSelectLoja = useRef(null);
@@ -54,7 +60,11 @@ export default function Jogo() {
   const [loja, setLoja] = useState(false);
   const [botaoCartas, setBotaoCartas] = useState(0);
   const [botaoGrafico, setBotaoGrafico] = useState(0);
-  const [iniciar, setIniciar] = useState(false)
+  const [iniciar, setIniciar] = useState(false);
+  const [treinamento, setTreinamento] = useState(false);
+
+  const [pontuacaoAcertos, setPontuacaoAcertos] = useState(0);
+  const [pontuacaoErros, setPontuacaoErros] = useState(0);
 
   useEffect(() => {
     const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios"));
@@ -71,13 +81,32 @@ export default function Jogo() {
       );
 
       setPerguntasSelecionadas(selecaoPerguntas);
+
       if (selecaoPerguntas.length > 0) {
         setAlternativasEmbaralhadas(
           embaralharPerguntas(selecaoPerguntas[0].alternativas)
         );
       }
     }
-  }, [nome, iniciar, categoriasSelecionadas]);
+  }, [nome, iniciar, treinamento, categoriasSelecionadas]);
+
+  useEffect(() => {
+    if (treinamento) {
+      const selecaoPerguntasTreino = selecionarPerguntasTreino(
+        embaralharPerguntas,
+        categoriasSelecionadas
+      );
+  
+      setPerguntasSelecionadas(selecaoPerguntasTreino);
+  
+      if (selecaoPerguntasTreino.length > 0) {
+        setAlternativasEmbaralhadas(
+          embaralharPerguntas(selecaoPerguntasTreino[0].alternativas)
+        );
+      }
+    }
+  }, [treinamento, categoriasSelecionadas, embaralharPerguntas]);
+  
 
   useEffect(() => {
     if (jogoTerminado) {
@@ -85,8 +114,6 @@ export default function Jogo() {
       console.log(nome, pontuacao);
     }
   }, [jogoTerminado]);
-
-  
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
@@ -98,26 +125,24 @@ export default function Jogo() {
         className="bg-primary-tertiary d-flex flex-column justify-content-center align-items-center"
         style={{ flex: 1, width: "100vw" }}
       >
-        
-        {iniciar === false && (
+        {iniciar === false && !treinamento ? (
           <>
             <CategoryButton
               mudarCategoria={mudarCategoria}
               setCategoriasSelecionadas={setCategoriasSelecionadas}
             />
-          </>
-           
-        )}       
-          <div>
-          {iniciar === false && (         
-              <AreaUser
-                nome={nome}
-                setNome={setNome}
-                listaUsuarios={listaUsuarios}
-                iniciarJogo={iniciarJogo}
-                setIniciar={setIniciar}
-              />
-          )}
+          </> 
+        ) : ""}
+        <div>
+          {iniciar === false && !treinamento ? (
+            <AreaUser
+              nome={nome}
+              setNome={setNome}
+              listaUsuarios={listaUsuarios}
+              iniciarJogo={iniciarJogo}
+              setIniciar={setIniciar}
+            />
+          ) : ""}
         </div>
 
         {iniciar === true && !jogoTerminado ? (
@@ -134,8 +159,7 @@ export default function Jogo() {
                       })}
                     </span>
                   </div>
-                  <AreaPoints valores={valores} perguntaAtual={perguntaAtual}/>
-
+                  <AreaPoints valores={valores} perguntaAtual={perguntaAtual} />
                 </div>
               )}
               {perguntasSelecionadas.length > 0 && (
@@ -304,43 +328,109 @@ export default function Jogo() {
         ) : (
           <h2>{mensagemFinal}</h2>
         )}
-        <footer className="w-100 d-flex justify-content-center gap-3 py-2">
-          <ButtonAction
-            label="Reiniciar"
-            cor="warning"
-            onClick={() =>
-              restartarJogo(
-                setPerguntasSelecionadas,
-                setCategoriasSelecionadas,
-                setPerguntaAtual,
-                setPontuacao,
-                setJogoTerminado,
-                setMensagemFinal,
-                setAlternativasEmbaralhadas,
-                setNome,
-                setCliques,
-                setGrafico,
-                setBotaoCartas,
-                setBotaoGrafico,
-                setIniciar
-              )
-            }
-          />
-          <ButtonAction
-            label="Parar"
-            cor="danger"
-            onClick={() => {
-              pararJogo(
-                nome,
-                valores,
-                perguntaAtual,
-                setPontuacao,
-                setMensagemFinal,
-                setJogoTerminado
-              );
-            }}
-          />
-        </footer>
+        {iniciar && (
+          <footer className="w-100 d-flex justify-content-center gap-3 py-2">
+            <ButtonAction
+              label="Reiniciar"
+              cor="warning"
+              onClick={() =>
+                restartarJogo(
+                  setPerguntasSelecionadas,
+                  setCategoriasSelecionadas,
+                  setPerguntaAtual,
+                  setPontuacao,
+                  setJogoTerminado,
+                  setMensagemFinal,
+                  setAlternativasEmbaralhadas,
+                  setNome,
+                  setCliques,
+                  setGrafico,
+                  setBotaoCartas,
+                  setBotaoGrafico,
+                  setIniciar
+                )
+              }
+            />
+            <ButtonAction
+              label="Parar"
+              cor="danger"
+              onClick={() => {
+                pararJogo(
+                  nome,
+                  valores,
+                  perguntaAtual,
+                  setPontuacao,
+                  setMensagemFinal,
+                  setJogoTerminado
+                );
+              }}
+            />
+          </footer>
+        )}
+       
+        {!iniciar && (<button
+          className="btn btn-lg btn-warning w-25"
+          onClick={() => iniciarTreinamento(setTreinamento)}
+        >
+          Iniciar treinamento
+        </button>)}
+        {treinamento && (
+          <div className="container">
+          <div className="bg-body p-3">
+            <h2 className="text-center">Treinamento</h2>
+            <p>Pergunta {perguntaAtual + 1}:</p>
+            <h4>
+              {perguntasSelecionadas.length > 0 &&
+              perguntasSelecionadas[perguntaAtual]
+                ? perguntasSelecionadas[perguntaAtual].pergunta
+                : "Carregando pergunta..."}
+            </h4>
+
+            <div className="alternativas">
+              {alternativasEmbaralhadas.map((alternativa, index) => (
+                <button
+                  key={index}
+                  className="btn btn-primary"
+                  onClick={() =>
+                    verificarRespostaTreino(
+                      alternativa,
+                      perguntasSelecionadas,
+                      perguntaAtual,
+                      setPontuacaoAcertos,
+                      setPontuacaoErros,
+                      setPerguntaAtual,
+                      setAlternativasEmbaralhadas,
+                      embaralharPerguntas
+                    )
+                  }
+                >
+                  {alternativa}
+                </button>
+              ))}
+            </div>
+
+            <div className="pontuacoes my-4">
+              <p>Acertos: {pontuacaoAcertos}</p>
+              <p>Erros: {pontuacaoErros}</p>
+            </div>
+          </div>
+          <button
+          className="btn btn-lg btn-danger w-100"
+          onClick={() => sairTreinamento(
+            setPerguntasSelecionadas,
+            setCategoriasSelecionadas,
+            setPerguntaAtual,
+            setPontuacao,
+            setJogoTerminado,
+            setAlternativasEmbaralhadas,
+            setTreinamento
+          )}
+        >
+          Sair do treinamento
+        </button>
+          </div>
+        )}
+        
       </div>
     </div>
   );
