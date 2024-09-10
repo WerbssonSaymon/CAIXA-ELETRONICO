@@ -1,5 +1,5 @@
 import React from 'react'
-import Menu from '../../layout/menu'
+import Menu from '../../componentes/organisms/menu'
 import { cadastrarUsuario } from '../../services/usuarioService';
 
 import { useState, useEffect } from "react";

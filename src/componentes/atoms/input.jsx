@@ -1,11 +1,11 @@
 import React from 'react';
 
-export default function Input({ value, onChange }) {
+export default function Input({type, value, onChange }) {
   return (
     <div>
       <input
-        type="number"
-        className="form-control mt-2 border border-primary"
+        type={type}
+        className="form-control border border-primary"
         value={value}
         onChange={onChange}
       />
