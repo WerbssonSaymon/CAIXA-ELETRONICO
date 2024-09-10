@@ -1,7 +1,7 @@
 import React from 'react'
-import Menu from '../../layout/menu'
-import Title from '../../componentes/title'
-import Label from '../../componentes/label'
+import Menu from '../../componentes/organisms/menu'
+import Title from '../../componentes/atoms/title'
+import Label from '../../componentes/atoms/label'
 import {useState} from 'react'
 import { coletarAlternativas, cadastrarPergunta } from '../../services/perguntaService'
 

@@ -1,8 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import Menu from "../../layout/menu";
-import Title from "../../componentes/title";
-import Table from "../../componentes/table";
+import Menu from "../../componentes/organisms/menu";
+import Title from "../../componentes/atoms/title";
+import Table from "../../componentes/atoms/table";
 import {
   calcularSaldo,
   executarMovimentacao,

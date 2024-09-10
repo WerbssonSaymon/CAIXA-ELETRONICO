@@ -1,6 +1,6 @@
 import React from "react";
-import Menu from "../../layout/menu";
-import Title from "../../componentes/title";
+import Menu from "../../componentes/organisms/menu";
+import Title from "../../componentes/atoms/title";
 import { limparPerguntas, removerPergunta } from "../../services/adminPergunta";
 import { useState, useEffect } from "react";
 import {perguntas} from '../../data/quests';

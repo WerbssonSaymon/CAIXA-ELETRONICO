@@ -1,16 +1,16 @@
 import React from "react";
-import Menu from "../../layout/menu";
-import Title from "../../componentes/title";
-import Grafico from "../../componentes/grafich";
-import Rank from "../../componentes/rank";
-import ButtonAction from "../../componentes/buttonAction";
-import ButtonHelp from "../../componentes/buttonHelp";
-import ButtonShop from "../../componentes/buttonShop";
-import Shop from "../../componentes/shop";
-import Cards from "../../componentes/cards";
-import AreaPoints from "../../componentes/areaPoints";
-import CategoryButton from "../../componentes/categoryButton";
-import AreaUser from "../../componentes/areaUser";
+import Menu from "../../componentes/organisms/menu";
+import Title from "../../componentes/atoms/title";
+import Grafico from "../../componentes/atoms/grafich";
+import Rank from "../../componentes/molecules/rank";
+import ButtonAction from "../../componentes/atoms/buttonAction";
+import ButtonHelp from "../../componentes/atoms/buttonHelp";
+import ButtonShop from "../../componentes/atoms/buttonShop";
+import Shop from "../../componentes/atoms/shop";
+import Cards from "../../componentes/atoms/cards";
+import AreaPoints from "../../componentes/molecules/areaPoints";
+import CategoryButton from "../../componentes/molecules/categoryButton";
+import AreaUser from "../../componentes/molecules/areaUser";
 import { useState, useEffect, useRef } from "react";
 import { valores } from "../../data/quests";
 import {
