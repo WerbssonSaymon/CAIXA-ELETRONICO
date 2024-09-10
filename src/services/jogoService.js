@@ -122,13 +122,20 @@ export function perguntaSecreta(
       embaralharPerguntas
     );
     if (novaPergunta) {
+      const perguntaSecreta = {
+        ...novaPergunta,
+        isSecreta: true,
+      };
       setAlternativasEmbaralhadas(
-        embaralharPerguntas(novaPergunta.alternativas)
+        embaralharPerguntas(perguntaSecreta.alternativas)
       );
+
       setPerguntasSelecionadas((perguntas) => {
         const novasPerguntas = [...perguntas];
-        
-        novasPerguntas[perguntaAtual] = novaPergunta;
+
+        const posicaoAleatoria = Math.floor(Math.random() * novasPerguntas.length);
+        novasPerguntas.splice(posicaoAleatoria, 0, perguntaSecreta);
+
         return novasPerguntas;
       });
     }

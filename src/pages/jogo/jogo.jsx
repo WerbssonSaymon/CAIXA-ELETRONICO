@@ -378,7 +378,7 @@ export default function Jogo() {
           <div className="container">
           <div className="bg-body p-3">
             <h2 className="text-center">Treinamento</h2>
-            <p>Pergunta {perguntaAtual + 1}:</p>
+            
             <h4>
               {perguntasSelecionadas.length > 0 &&
               perguntasSelecionadas[perguntaAtual]
