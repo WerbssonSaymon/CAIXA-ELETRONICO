@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "github": "git add . && git commit -m \" Mudança de estilo nas pages: ad-perguntas, gestão e usuarios\" && git push origin modo-6"
+    "github": "git add . && git commit -m \" Mudança de estilo na page: home\" && git push origin modo-6"
   },
   "dependencies": {
     "chart.js": "^4.4.4",
