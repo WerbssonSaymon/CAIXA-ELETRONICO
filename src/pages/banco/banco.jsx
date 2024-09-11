@@ -6,8 +6,9 @@ import Table from "../../componentes/atoms/table";
 import {
   calcularSaldo,
   executarMovimentacao,
-  lidarComUsuarioSelecionado
+  lidarComUsuarioSelecionado,
 } from "../../services/bancoService";
+import "../../main.css";
 
 export default function banco() {
   const [listaUsuarios, setListaUsuarios] = useState([]);
@@ -39,11 +40,8 @@ export default function banco() {
 
       localStorage.setItem("usuarios", JSON.stringify(usuariosAtualizados));
       setListaUsuarios(usuariosAtualizados);
-
     }
   }, []);
-
-  
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
@@ -57,7 +55,14 @@ export default function banco() {
           <select
             className="form-select form-select-lg border border-primary"
             value={usuarioSelecionado}
-            onChange={(e) => lidarComUsuarioSelecionado(e, listaUsuarios, setUsuarioSelecionado, setListaOperacoes)}
+            onChange={(e) =>
+              lidarComUsuarioSelecionado(
+                e,
+                listaUsuarios,
+                setUsuarioSelecionado,
+                setListaOperacoes
+              )
+            }
           >
             <option value="">Selecione um usuário</option>
             {listaUsuarios.map((x, i) => (
@@ -70,24 +75,39 @@ export default function banco() {
       </div>
 
       <div
-        className="row bg-primary-tertiary"
+        className="row bg-primary-tertiary d-flex justify-content-around"
         style={{ flexBasis: "80%", width: "100%" }}
       >
         {usuarioSelecionado && (
-          <div className="col-4 p-2 bg-primary text-white fw-3">
-            <h3 className="text-center">Bem vindo(a): {usuarioSelecionado}</h3>
-            <h3 className="text-center">
-              Saldo atual:{" "}
-              {calcularSaldo(usuarioSelecionado, listaUsuarios).toLocaleString(
-                "pt-br",
-                { style: "currency", currency: "BRL" }
-              )}
-            </h3>
+          <div className="col-4 py-4 h-50 bg-principal text-white d-flex flex-column justify-content-start rounded-1">
+            <div className="d-flex align-items-start w-100 justify-content-between">
+              <div className="d-flex">
+                <i className="fa-solid fa-user mx-2 fs-1"></i>
+                <div className="d-flex flex-column align-items-start">
+                  <p>
+                    {usuarioSelecionado}
+                    <br></br>
+                    Saldo:{" "}
+                    {calcularSaldo(
+                      usuarioSelecionado,
+                      listaUsuarios
+                    ).toLocaleString("pt-br", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              <div className="d-flex">
+                <i className="fa-solid fa-eye-slash fs-4 mx-1"></i>
+                <i className="fa-solid fa-bell fs-4 mx-1"></i>
+                <i className="fa-solid fa-lock fs-4 mx-1"></i>
+              </div>
+            </div>
 
             {usuarioSelecionado && (
               <div className="p-2">
-                <Title titulo="caixa eletrônico" />
-
                 <div className="d-grid gap-2 mt-3">
                   <select
                     className="form-select form-select-lg border border-primary mb-3"
@@ -154,37 +174,71 @@ export default function banco() {
                 </div>
               </div>
             )}
+ 
           </div>
         )}
 
         {usuarioSelecionado && (
-          <div className="col-8 bg-body">
-            <Title titulo="Historico de movimentação"></Title>
-
-            <div style={{ height: "600px", overflow: "scroll" }}>
-              <Table>
-                <thead>
-                  <tr>
-                    <th>Operação</th>
-                    <th>Valor</th>
-                    <th>Data de Transação</th>
-                  </tr>
-                </thead>
-                <tbody className="table-group-divider">
-                  {listaOperacoes.map((u, i) => (
-                    <tr key={i}>
-                      <td>{u.operacao} </td>
-                      <td>
-                        {u.valor.toLocaleString("pt-br", {
-                          style: "currency",
-                          currency: "BRL",
-                        })}
-                      </td>
-                      <td>{u.data}</td>
+          <div className="col-4 h-75 bg-body">
+            <div className="row">
+              <div className="col bg-principal">
+                <Title titulo="Extrato" cor="white"></Title>
+              </div>
+            </div>
+            <div className="row">
+              <div style={{ height: "500px", overflow: "scroll" }}>
+                <Table>
+                  <thead className="bg-principal">
+                    <tr>
+                      <th>Operação</th>
+                      <th>Valor</th>
+                      <th>Data de Transação</th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
+                  </thead>
+                  <tbody className="table-group-divider">
+                    {listaOperacoes.map((u, i) => (
+                      <tr key={i}>
+                        <td>{u.operacao} </td>
+                        <td>
+                          {u.valor.toLocaleString("pt-br", {
+                            style: "currency",
+                            currency: "BRL",
+                          })}
+                        </td>
+                        <td>{u.data}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {usuarioSelecionado && (
+          <div className="col-2 bg-principal h-50 d-flex flex-column align-items-center justify-content-center rounded">
+            <h3 className="text-white">Serviços</h3>
+            <div className="d-flex flex-column justify-content-between">
+              <button className="btn btn-light my-1 d-flex align-items-center">
+              <i className="fs-3 mx-3 fa-solid fa-credit-card"></i>
+              Cartôes
+              </button>
+              <button className="btn btn-light my-1 d-flex align-items-center">
+              <i className="fs-3 mx-3 fa-solid fa-qrcode"></i>
+              QR Code
+              </button>
+              <button className="btn btn-light my-1 d-flex align-items-center">
+              <i className="fs-3 mx-3 fa-solid fa-code-compare"></i>
+              Troca de credito
+              </button>
+              <button className="btn btn-light my-1 d-flex align-items-center">
+              <i className="fs-3 mx-3 fa-solid fa-money-bill-trend-up"></i>
+              Investimento
+              </button>
+              <button className="btn btn-light my-1 d-flex align-items-center">
+              <i className="fs-3 mx-3 fa-solid fa-mobile-screen-button"></i>
+              Recarga
+              </button>
             </div>
           </div>
         )}
