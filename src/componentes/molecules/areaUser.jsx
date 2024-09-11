@@ -3,7 +3,7 @@ import React from 'react'
 export default function areaUser({ nome, setNome, listaUsuarios, iniciarJogo, setIniciar }) {
   return (
     <>
-      <h2 className="text-center my-4">Selecione um jogador</h2>
+      <h2 className="text-center text-white my-4">Selecione um jogador</h2>
       <select
         className="form-select form-select-lg border border-primary"
         onChange={(e) => setNome(e.target.value)}
@@ -17,7 +17,7 @@ export default function areaUser({ nome, setNome, listaUsuarios, iniciarJogo, se
         ))}
       </select>
       <button
-        className="btn btn-lg btn-success w-100"
+        className="w-100 btn btn-lg btn-primary border border-3 border-light mt-1"
         onClick={() => iniciarJogo(setIniciar)}
       >
         Começar jogo

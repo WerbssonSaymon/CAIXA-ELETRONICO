@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import Subtitle from '../atoms/subtitle'
 
 export default function rank() {
 
@@ -11,8 +12,8 @@ export default function rank() {
       }, [])
   return (
     <>
-      <h3 className='text-center'>Recordes Atuais</h3>
-      <nav className="navbar bg-body-tertiary">
+      <nav className="navbar bg-body-tertiary d-flex justify-content-center">
+        
         <ul className="w-100 d-flex justify-content-around align-items-center" style={{listStyle: "none"}}>  
           {placar.map((usuario, index) => (
             <li key={index} className="mx-2">
@@ -20,6 +21,7 @@ export default function rank() {
             </li>
           ))}
         </ul>
+        <Subtitle subtituto="Recordes Atuais"/>
       </nav>
     </>
   )

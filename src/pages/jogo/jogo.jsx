@@ -1,6 +1,5 @@
 import React from "react";
 import Menu from "../../componentes/organisms/menu";
-import Title from "../../componentes/atoms/title";
 import Grafico from "../../componentes/atoms/grafich";
 import Rank from "../../componentes/molecules/rank";
 import ButtonAction from "../../componentes/atoms/buttonAction";
@@ -36,8 +35,9 @@ import {
   iniciarTreinamento,
   verificarRespostaTreino,
   selecionarPerguntasTreino,
-  sairTreinamento
+  sairTreinamento,
 } from "../../services/treinamentoService";
+import "../../main.css";
 
 export default function Jogo() {
   const refSelectLoja = useRef(null);
@@ -96,9 +96,9 @@ export default function Jogo() {
         embaralharPerguntas,
         categoriasSelecionadas
       );
-  
+
       setPerguntasSelecionadas(selecaoPerguntasTreino);
-  
+
       if (selecaoPerguntasTreino.length > 0) {
         setAlternativasEmbaralhadas(
           embaralharPerguntas(selecaoPerguntasTreino[0].alternativas)
@@ -106,7 +106,6 @@ export default function Jogo() {
       }
     }
   }, [treinamento, categoriasSelecionadas, embaralharPerguntas]);
-  
 
   useEffect(() => {
     if (jogoTerminado) {
@@ -118,61 +117,78 @@ export default function Jogo() {
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Menu />
-      <Title titulo="Show do Milhão" />
       {iniciar === true && <Rank />}
 
       <div
         className="bg-primary-tertiary d-flex flex-column justify-content-center align-items-center"
-        style={{ flex: 1, width: "100vw" }}
+        style={{
+          flex: 1,
+          width: "100vw",
+          backgroundImage: `url(/tela-jogo.avif)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
       >
-        {iniciar === false && !treinamento ? (
-          <>
-            <CategoryButton
-              mudarCategoria={mudarCategoria}
-              setCategoriasSelecionadas={setCategoriasSelecionadas}
-            />
-          </> 
-        ) : ""}
-        <div>
+        <div className="bg-primary bg-opacity-75 rounded p-5">
           {iniciar === false && !treinamento ? (
-            <AreaUser
-              nome={nome}
-              setNome={setNome}
-              listaUsuarios={listaUsuarios}
-              iniciarJogo={iniciarJogo}
-              setIniciar={setIniciar}
-            />
-          ) : ""}
+            <>
+              <CategoryButton
+                mudarCategoria={mudarCategoria}
+                setCategoriasSelecionadas={setCategoriasSelecionadas}
+              />
+              <AreaUser
+                nome={nome}
+                setNome={setNome}
+                listaUsuarios={listaUsuarios}
+                iniciarJogo={iniciarJogo}
+                setIniciar={setIniciar}
+              />
+              {!iniciar && (
+                <>
+                <button
+                  className="w-100 btn btn-lg btn-primary border border-3 border-light mt-1"
+                  onClick={() => iniciarTreinamento(setTreinamento)}
+                >
+                  Iniciar treinamento
+                </button>
+                <button
+                className="w-100 btn btn-lg btn-primary border border-3 border-light mt-1"
+                onClick={() =>
+                  perguntaSecreta(
+                    perguntaAtual,
+                    perguntasSelecionadas,
+                    obterPerguntaNaoUsada,
+                    embaralharPerguntas,
+                    setPerguntasSelecionadas,
+                    setAlternativasEmbaralhadas
+                  )
+                }
+              >
+                Adicionar Pergunta Secreta
+              </button>
+              </>
+              )}
+            </>
+          ) : (
+            ""
+          )}
         </div>
 
         {iniciar === true && !jogoTerminado ? (
-          <div className="row">
-            <div className="bg-body col">
-              {iniciar === true && (
-                <div className="bg-primary p-3 d-flex flex-column justify-content-around">
-                  <div className="d-flex justify-content-around">
-                    <h3 className="text-white">Partipante: {nome}</h3>
-                    <span className="fs-3 text-white fw-semibold">
-                      {pontuacao.toLocaleString("pt-br", {
-                        style: "currency",
-                        currency: "BRL",
-                      })}
-                    </span>
-                  </div>
-                  <AreaPoints valores={valores} perguntaAtual={perguntaAtual} />
-                </div>
-              )}
+          <div className="row border-game">
+            <div className="bg-primary bg-opacity-75 col">
               {perguntasSelecionadas.length > 0 && (
                 <>
-                  <div className="bg-danger p-3">
-                    <h2 className="text-white">
+                  <div className="bg-game p-3">
+                    <h2 className="text-white text-uppercase">
                       {perguntasSelecionadas[perguntaAtual].pergunta}
                     </h2>
                   </div>
                   <div className="d-flex flex-column gap-1 m-1">
                     {alternativasEmbaralhadas.map((alternativa, index) => (
                       <button
-                        className="btn btn-danger p-3 fw-3 w-75 d-flex align-items-center justify-content-start"
+                        className="btn bg-game text-white text-uppercase p-3 fw-3 w-75 d-flex align-items-center justify-content-start"
                         key={index}
                         onClick={() =>
                           verificarResposta(
@@ -203,22 +219,53 @@ export default function Jogo() {
                       </button>
                     ))}
                   </div>
+                  {iniciar === true && (
+                    <div className="bg-game p-3 d-flex flex-column justify-content-around">
+                      <div className="d-flex justify-content-around">
+                        <h3 className="text-white text-uppercase">
+                          Partipante: {nome}
+                        </h3>
+                        <span className="fs-4 text-white fw-semibold">
+                          {pontuacao.toLocaleString("pt-br", {
+                            style: "currency",
+                            currency: "BRL",
+                          })}
+                        </span>
+                      </div>
+                      <AreaPoints
+                        valores={valores}
+                        perguntaAtual={perguntaAtual}
+                      />
+                    </div>
+                  )}
                 </>
               )}
             </div>
-            <div className="bg-body col" style={{ overflow: "scroll" }}>
-              <ul>
-                <h2>Perguntas desta rodada</h2>
-                {perguntasSelecionadas.map((perguntas, index) => (
-                  <li key={index}>
-                    <p>
-                      {perguntas.dificuldade} - {perguntas.pergunta}
-                    </p>
-                  </li>
-                ))}
-              </ul>
+            <div className="bg-game col d-flex flex-column justify-content-center align-items-center">
+              <h2 className="text-white text-center">Perguntas desta rodada</h2>
+              <div
+                className="table-responsive w-100"
+                style={{ height: "500px", overflow: "scroll" }}
+              >
+                <table className="table table-striped">
+                  <thead className="table-light">
+                    <tr>
+                      <th>Dificuldade</th>
+                      <th>Pergunta</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {perguntasSelecionadas.map((perguntas, index) => (
+                      <tr key={index}>
+                        <td>{perguntas.dificuldade}</td>
+                        <td>{perguntas.pergunta}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div className="bg-body col d-flex flex-column justify-content-end">
+            <div className="bg-game col d-flex flex-column justify-content-end">
               {cartas && (
                 <div className="w-100 d-flex flex-column align-items-center justify-content-center">
                   <Cards
@@ -236,7 +283,7 @@ export default function Jogo() {
                     }
                   />
                   <button
-                    className="btn btn-danger text-white flex-grow-1"
+                    className="w-100 mt-1 mb-3 btn btn-danger text-white flex-grow-1"
                     onClick={() => setCartas(false)}
                   >
                     X
@@ -247,7 +294,7 @@ export default function Jogo() {
                 <div className="w-100 d-flex flex-column align-items-center justify-content-center">
                   <Grafico />
                   <button
-                    className="btn btn-danger text-white flex-grow-1"
+                    className="w-100 mt-1 mb-3 btn btn-danger text-white flex-grow-1"
                     onClick={() => setGrafico(false)}
                   >
                     X
@@ -271,57 +318,48 @@ export default function Jogo() {
                   }
                 />
               )}
-              <div className="d-flex gap-1 m-2 pt-3">
-                <ButtonShop
-                  label="Comprar ajuda"
-                  onClick={() => mostrarLoja(loja, setLoja)}
-                />
+              <div className="">
+                <div className="row d-flex align-items-center justify-content-center">
+                  <div className="col-md-12">
+                    <ButtonShop
+                      label="Comprar ajuda"
+                      onClick={() => mostrarLoja(loja, setLoja)}
+                    />
+                  </div>
+                </div>
+                <div className="row d-flex align-items-center justify-content-center">
+                  <div className="col-md-12 my-2">
+                    <ButtonHelp
+                      label="Pular"
+                      botaoEstado={cliques >= 3}
+                      onClick={() =>
+                        pularPergunta(
+                          perguntasSelecionadas,
+                          perguntaAtual,
+                          obterPerguntaNaoUsada,
+                          embaralharPerguntas,
+                          setAlternativasEmbaralhadas,
+                          setPerguntasSelecionadas,
+                          setCliques
+                        )
+                      }
+                    />
 
-                <ButtonHelp
-                  label="Pular"
-                  botaoEstado={cliques >= 3}
-                  onClick={() =>
-                    pularPergunta(
-                      perguntasSelecionadas,
-                      perguntaAtual,
-                      obterPerguntaNaoUsada,
-                      embaralharPerguntas,
-                      setAlternativasEmbaralhadas,
-                      setPerguntasSelecionadas,
-                      setCliques
-                    )
-                  }
-                />
+                    <ButtonHelp
+                      label="Cartas"
+                      botaoEstado={botaoCartas >= 1}
+                      onClick={() => mostrarCartas(cartas, setCartas)}
+                    />
 
-                <ButtonHelp
-                  label="Cartas"
-                  botaoEstado={botaoCartas >= 1}
-                  onClick={() => mostrarCartas(cartas, setCartas)}
-                />
-
-                <ButtonHelp
-                  label="Universitário"
-                  botaoEstado={botaoGrafico}
-                  onClick={() =>
-                    mostrarGrafico(grafico, setGrafico, setBotaoGrafico)
-                  }
-                />
-
-                <button
-                  className="btn btn-lg btn-primary"
-                  onClick={() =>
-                    perguntaSecreta(
-                      perguntaAtual,
-                      perguntasSelecionadas,
-                      obterPerguntaNaoUsada,
-                      embaralharPerguntas,
-                      setPerguntasSelecionadas,
-                      setAlternativasEmbaralhadas
-                    )
-                  }
-                >
-                  Adicionar Pergunta Secreta
-                </button>
+                    <ButtonHelp
+                      label="Universitário"
+                      botaoEstado={botaoGrafico}
+                      onClick={() =>
+                        mostrarGrafico(grafico, setGrafico, setBotaoGrafico)
+                      }
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -367,70 +405,65 @@ export default function Jogo() {
             />
           </footer>
         )}
-       
-        {!iniciar && (<button
-          className="btn btn-lg btn-warning w-25"
-          onClick={() => iniciarTreinamento(setTreinamento)}
-        >
-          Iniciar treinamento
-        </button>)}
+
         {treinamento && (
           <div className="container">
-          <div className="bg-body p-3">
-            <h2 className="text-center">Treinamento</h2>
-            
-            <h4>
-              {perguntasSelecionadas.length > 0 &&
-              perguntasSelecionadas[perguntaAtual]
-                ? perguntasSelecionadas[perguntaAtual].pergunta
-                : "Carregando pergunta..."}
-            </h4>
+            <div className="bg-body p-3">
+              <h2 className="text-center">Treinamento</h2>
 
-            <div className="alternativas">
-              {alternativasEmbaralhadas.map((alternativa, index) => (
-                <button
-                  key={index}
-                  className="btn btn-primary"
-                  onClick={() =>
-                    verificarRespostaTreino(
-                      alternativa,
-                      perguntasSelecionadas,
-                      perguntaAtual,
-                      setPontuacaoAcertos,
-                      setPontuacaoErros,
-                      setPerguntaAtual,
-                      setAlternativasEmbaralhadas,
-                      embaralharPerguntas
-                    )
-                  }
-                >
-                  {alternativa}
-                </button>
-              ))}
-            </div>
+              <h4>
+                {perguntasSelecionadas.length > 0 &&
+                perguntasSelecionadas[perguntaAtual]
+                  ? perguntasSelecionadas[perguntaAtual].pergunta
+                  : "Carregando pergunta..."}
+              </h4>
 
-            <div className="pontuacoes my-4">
-              <p>Acertos: {pontuacaoAcertos}</p>
-              <p>Erros: {pontuacaoErros}</p>
+              <div className="alternativas">
+                {alternativasEmbaralhadas.map((alternativa, index) => (
+                  <button
+                    key={index}
+                    className="btn btn-primary"
+                    onClick={() =>
+                      verificarRespostaTreino(
+                        alternativa,
+                        perguntasSelecionadas,
+                        perguntaAtual,
+                        setPontuacaoAcertos,
+                        setPontuacaoErros,
+                        setPerguntaAtual,
+                        setAlternativasEmbaralhadas,
+                        embaralharPerguntas
+                      )
+                    }
+                  >
+                    {alternativa}
+                  </button>
+                ))}
+              </div>
+
+              <div className="pontuacoes my-4">
+                <p>Acertos: {pontuacaoAcertos}</p>
+                <p>Erros: {pontuacaoErros}</p>
+              </div>
             </div>
-          </div>
-          <button
-          className="btn btn-lg btn-danger w-100"
-          onClick={() => sairTreinamento(
-            setPerguntasSelecionadas,
-            setCategoriasSelecionadas,
-            setPerguntaAtual,
-            setPontuacao,
-            setJogoTerminado,
-            setAlternativasEmbaralhadas,
-            setTreinamento
-          )}
-        >
-          Sair do treinamento
-        </button>
+            <button
+              className="btn btn-lg btn-danger w-100"
+              onClick={() =>
+                sairTreinamento(
+                  setPerguntasSelecionadas,
+                  setCategoriasSelecionadas,
+                  setPerguntaAtual,
+                  setPontuacao,
+                  setJogoTerminado,
+                  setAlternativasEmbaralhadas,
+                  setTreinamento
+                )
+              }
+            >
+              Sair do treinamento
+            </button>
           </div>
         )}
-        
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import React from 'react'
 export default function buttonHelp({ label, botaoEstado, onClick }) {
     return (
       <button
-        className={`btn btn-warning flex-grow-1 ${botaoEstado ? 'disabled' : ''}`}
+        className={`col-md-4 p-1 btn btn-warning ${botaoEstado ? 'disabled' : ''}`}
         disabled={botaoEstado}
         onClick={onClick}
       >

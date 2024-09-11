@@ -9,7 +9,7 @@ export default function home() {
         <div className='bg-primary-tertiary d-flex justify-content-start align-items-center' 
         style={{ flex: 1,
          width: "100vw",
-         backgroundImage: `url(/tela-inicial.jpg)`, 
+         backgroundImage: `url(/tela-inicio.webp)`, 
           backgroundSize: 'cover', 
           backgroundPosition: 'center', 
           backgroundRepeat: 'no-repeat'}}>
