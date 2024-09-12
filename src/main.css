@@ -9,10 +9,10 @@ body {
     background: linear-gradient(90deg, rgba(92,15,15,1) 0%, rgba(246,30,16,1) 36%, rgba(244,29,16,1) 39%, rgba(205,16,9,1) 90%);
 }
 
-.bg-principal {
-    background-color: rgb(21,98,127);
-}
-
 .border-game {
     border: 3px solid red;
+}
+
+.bg-principal {
+    background-color: rgb(21,98,127);
 }

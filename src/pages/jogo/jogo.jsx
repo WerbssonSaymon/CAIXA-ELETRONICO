@@ -74,7 +74,7 @@ export default function Jogo() {
   }, []);
 
   useEffect(() => {
-    if (nome && iniciar === true) {
+    if (nome) {
       const selecaoPerguntas = selecionarPerguntas(
         embaralharPerguntas,
         categoriasSelecionadas
@@ -88,7 +88,7 @@ export default function Jogo() {
         );
       }
     }
-  }, [nome, iniciar, treinamento, categoriasSelecionadas]);
+  }, [nome, treinamento, categoriasSelecionadas]);
 
   useEffect(() => {
     if (treinamento) {
@@ -113,6 +113,38 @@ export default function Jogo() {
       console.log(nome, pontuacao);
     }
   }, [jogoTerminado]);
+
+  function mudancaDeModo(modo){
+    if (modo === "jogo"){
+      verificarResposta(
+        nome,
+        alternativa,
+        perguntasSelecionadas,
+        perguntaAtual,
+        valores,
+        setPontuacao,
+        setPerguntaAtual,
+        setPontuacaoErrar,
+        setPontuacaoParar,
+        setPontuacaoAcertar,
+        setAlternativasEmbaralhadas,
+        setMensagemFinal,
+        setJogoTerminado,
+        embaralharPerguntas
+      )
+    } else if (modo === "treino"){
+      verificarRespostaTreino(
+        alternativa,
+        perguntasSelecionadas,
+        perguntaAtual,
+        setPontuacaoAcertos,
+        setPontuacaoErros,
+        setPerguntaAtual,
+        setAlternativasEmbaralhadas,
+        embaralharPerguntas
+      )
+    }
+  }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
@@ -147,13 +179,13 @@ export default function Jogo() {
               {!iniciar && (
                 <>
                 <button
-                  className="w-100 btn btn-lg btn-primary border border-3 border-light mt-1"
+                  className="w-100 btn btn-lg btn-primary text-uppercase border border-5 border-light mt-2"
                   onClick={() => iniciarTreinamento(setTreinamento)}
                 >
                   Iniciar treinamento
                 </button>
                 <button
-                className="w-100 btn btn-lg btn-primary border border-3 border-light mt-1"
+                className="w-100 btn btn-lg btn-primary text-uppercase border border-5 border-light mt-2"
                 onClick={() =>
                   perguntaSecreta(
                     perguntaAtual,
@@ -169,6 +201,30 @@ export default function Jogo() {
               </button>
               </>
               )}
+                      <div className="bg-game col d-flex flex-column justify-content-center align-items-center p-2">
+              <h2 className="text-white text-center">Perguntas desta rodada</h2>
+              <div
+                className="table-responsive w-100"
+                style={{ height: "300px", overflow: "scroll" }}
+              >
+                <table className="table table-striped">
+                  <thead className="table-light">
+                    <tr>
+                      <th>Dificuldade</th>
+                      <th>Pergunta</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {perguntasSelecionadas.map((perguntas, index) => (
+                      <tr key={index}>
+                        <td>{perguntas.dificuldade}</td>
+                        <td>{perguntas.pergunta}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
             </>
           ) : (
             ""
@@ -176,11 +232,11 @@ export default function Jogo() {
         </div>
 
         {iniciar === true && !jogoTerminado ? (
-          <div className="row border-game">
+          <div className="row w-75">
             <div className="bg-primary bg-opacity-75 col">
               {perguntasSelecionadas.length > 0 && (
                 <>
-                  <div className="bg-game p-3">
+                  <div className="bg-game col-md-12 p-3">
                     <h2 className="text-white text-uppercase">
                       {perguntasSelecionadas[perguntaAtual].pergunta}
                     </h2>
@@ -241,31 +297,8 @@ export default function Jogo() {
                 </>
               )}
             </div>
-            <div className="bg-game col d-flex flex-column justify-content-center align-items-center">
-              <h2 className="text-white text-center">Perguntas desta rodada</h2>
-              <div
-                className="table-responsive w-100"
-                style={{ height: "500px", overflow: "scroll" }}
-              >
-                <table className="table table-striped">
-                  <thead className="table-light">
-                    <tr>
-                      <th>Dificuldade</th>
-                      <th>Pergunta</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {perguntasSelecionadas.map((perguntas, index) => (
-                      <tr key={index}>
-                        <td>{perguntas.dificuldade}</td>
-                        <td>{perguntas.pergunta}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div className="bg-game col d-flex flex-column justify-content-end">
+            
+            <div className="bg-game col-md-6 d-flex flex-column justify-content-end">
               {cartas && (
                 <div className="w-100 d-flex flex-column align-items-center justify-content-center">
                   <Cards

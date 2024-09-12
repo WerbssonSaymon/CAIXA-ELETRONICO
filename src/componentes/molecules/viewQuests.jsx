@@ -1,5 +1,6 @@
 import React from 'react'
 import ViewQuestItem from './viewQuestItem'
+import '../../main.css'
 
 export default function viewQuests({ listaDePerguntas, setListaDePerguntas }) {
   return (

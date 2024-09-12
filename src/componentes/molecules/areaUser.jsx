@@ -17,7 +17,7 @@ export default function areaUser({ nome, setNome, listaUsuarios, iniciarJogo, se
         ))}
       </select>
       <button
-        className="w-100 btn btn-lg btn-primary border border-3 border-light mt-1"
+        className="w-100 btn btn-lg btn-primary text-uppercase border border-5 border-light mt-2"
         onClick={() => iniciarJogo(setIniciar)}
       >
         Começar jogo
