@@ -1,5 +1,5 @@
 import React from "react";
-import { calcularSaldo, removerUsuario } from "../../services/gestaoService";
+import { calcularSaldo, removerUsuario } from "../../services/cadastroUsuarioService";
 
 export default function viewUserItem({usuario, listaUsuarios, setListaUsuarios}) {
   return (

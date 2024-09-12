@@ -5,7 +5,9 @@ import ButtonAction from "../atoms/buttonAction";
 import {
   coletarAlternativas,
   cadastrarPergunta,
+  cancelarPergunta,
 } from "../../services/perguntaService";
+import { Link } from "react-router-dom";
 
 export default function formQuest({ setListaDePerguntas }) {
   const [pergunta, setPergunta] = useState("");
@@ -71,26 +73,48 @@ export default function formQuest({ setListaDePerguntas }) {
         ))}
       </div>
 
-      <div className="col-md-3">
-        <ButtonAction
-          cor="success"
-          label="Confirmar"
-          onClick={() =>
-            cadastrarPergunta(
-              pergunta,
-              alternativas,
-              resposta,
-              dificuldade,
-              categoria,
-              setListaDePerguntas,
-              setPergunta,
-              setAlternativas,
-              setResposta,
-              setDificuldade,
-              setCategoria
-            )
-          }
-        />
+      <div className="col-md-12 d-flex align-items-center">
+        <div className="d-flex align-items-stad-flex align-items-start w-100 justify-content-between">
+          <div className="d-flex">
+            <ButtonAction
+              cor="success"
+              label="Confirmar"
+              onClick={() =>
+                cadastrarPergunta(
+                  pergunta,
+                  alternativas,
+                  resposta,
+                  dificuldade,
+                  categoria,
+                  setListaDePerguntas,
+                  setPergunta,
+                  setAlternativas,
+                  setResposta,
+                  setDificuldade,
+                  setCategoria
+                )
+              }
+            />
+            <ButtonAction
+              cor="danger"
+              label="Cancelar"
+              onClick={() =>
+                cancelarPergunta(
+                  setPergunta,
+                  setAlternativas,
+                  setResposta,
+                  setDificuldade,
+                  setCategoria
+                )
+              }
+            />
+          </div>
+          <div className="d-flex">
+            <Link to={`/usuarios`}>
+              <ButtonAction label="Voltar" cor="outline-success" />
+            </Link>
+          </div>
+        </div>
       </div>
     </form>
   );

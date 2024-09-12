@@ -1,5 +1,5 @@
 import React from 'react'
-import { removerPergunta } from '../../services/adminPergunta'
+import { removerPergunta } from '../../services/cadastroPerguntaService'
 
 export default function viewQuestItem({ pergunta, listaDePerguntas, setListaDePerguntas }) {
   return (

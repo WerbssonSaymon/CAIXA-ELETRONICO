@@ -44,3 +44,17 @@ export function cadastrarPergunta(
   setDificuldade("");
   setCategoria("")
 }
+
+export function cancelarPergunta(
+  setPergunta,
+  setAlternativas,
+  setResposta,
+  setDificuldade,
+  setCategoria
+){
+  setPergunta(""),
+  setAlternativas(["", "", "", ""]),
+  setResposta(""),
+  setDificuldade(""),
+  setCategoria("")
+}

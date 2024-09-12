@@ -1,34 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import FormViewUser from "../../componentes/organisms/formViewUser";
+import Subtitle from "../../componentes/atoms/subtitle";
 import Menu from "../../componentes/organisms/menu";
-import FormUser from "../../componentes/organisms/formUser";
-import { cadastrarUsuario } from "../../services/usuarioService";
+import ViewUsers from "../../componentes/molecules/viewUsers";
 
-import { useState, useEffect } from "react";
-
-export default function usuario() {
+export default function gestao() {
   const [listaUsuarios, setListaUsuarios] = useState([]);
-  const [nome, setNome] = useState("");
 
   useEffect(() => {
-    const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios"));
-    if (usuariosSalvos) {
-      setListaUsuarios(usuariosSalvos);
-    }
+    const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios")) || [];
+    setListaUsuarios(usuariosSalvos);
   }, []);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Menu />
       <div
-        className="bg-primary-tertiary d-flex justify-content-center align-items-center"
+        className="bg-primary-tertiary d-flex flex-column align-items-center"
         style={{ flex: 1, width: "100vw" }}
       >
-        <FormUser
-          nome={nome}
-          setNome={setNome}
+        <FormViewUser />
+
+        <Subtitle subtitulo="Todos os usuarios cadastrados" />
+
+        <ViewUsers
           listaUsuarios={listaUsuarios}
           setListaUsuarios={setListaUsuarios}
-          cadastrarUsuario={cadastrarUsuario}
         />
       </div>
     </div>

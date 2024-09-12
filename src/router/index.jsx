@@ -1,13 +1,13 @@
 import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from '../pages/home/home';
-import Usuario from '../pages/usuario/usuario';
+import CadastroUsuario from '../pages/cadastroUsuario/cadastroUsuario';
 import Banco from '../pages/banco/banco';
-import Gestao from '../pages/gestao/gestao';
+import Usuario from '../pages/usuario/usuario';
 import Error from '../pages/error/error'
 import Jogo from '../pages/jogo/jogo'
-import Perguntas from '../pages/perguntas/perguntas'
-import AdminPergunta from '../pages/adminPergunta/adminPergunta'
+import CadastroPergunta from '../pages/cadastroPergunta/cadastroPergunta'
+import Pergunta from '../pages/pergunta/pergunta'
 
 
 export default function index() {
@@ -27,8 +27,8 @@ export default function index() {
             element: <Banco />
         },
         {
-            path: '/gestao',
-            element: <Gestao />
+            path: '/cadastro-usuarios',
+            element: <CadastroUsuario />
         },
         {
             path: '/jogo',
@@ -36,11 +36,11 @@ export default function index() {
         },
         {
             path: '/perguntas',
-            element: <Perguntas />
+            element: <Pergunta/>
         },
         {
-            path: '/ad-perguntas',
-            element: <AdminPergunta/>
+            path: '/cadastro-perguntas',
+            element: <CadastroPergunta />
         }
     ]);
 

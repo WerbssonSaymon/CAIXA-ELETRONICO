@@ -27,3 +27,7 @@ export function cadastrarUsuario(listaUsuarios, nome, setListaUsuarios, setNome)
 
     alert(`Usuário ${novoUsuario.nome.toUpperCase()} cadastrado com sucesso`);
   }
+
+export function cancelarUsuario(setNome){
+  setNome('')
+}
