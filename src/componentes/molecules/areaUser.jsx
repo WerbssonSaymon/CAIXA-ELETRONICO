@@ -1,6 +1,14 @@
-import React from 'react'
+import React from "react";
 
-export default function areaUser({ nome, setNome, listaUsuarios, iniciarJogo, setIniciar }) {
+export default function areaUser({
+  nome,
+  setNome,
+  listaUsuarios,
+  iniciarJogo,
+  setIniciar,
+  iniciarTreinamento,
+  setTreinamento,
+}) {
   return (
     <>
       <h2 className="text-center text-white my-4">Selecione um jogador</h2>
@@ -16,12 +24,20 @@ export default function areaUser({ nome, setNome, listaUsuarios, iniciarJogo, se
           </option>
         ))}
       </select>
+      <div className="w-100 d-flex">
       <button
-        className="w-100 btn btn-lg btn-primary text-uppercase border border-5 border-light mt-2"
+        className="w-100 btn btn-lg btn-primary text-uppercase border border-5 border-light mt-2 me-1"
         onClick={() => iniciarJogo(setIniciar)}
       >
         Começar jogo
       </button>
+      <button
+        className="w-100 btn btn-lg btn-primary text-uppercase border border-5 border-light mt-2"
+        onClick={() => iniciarTreinamento(setTreinamento)}
+      >
+        Iniciar treinamento
+      </button>
+      </div>
     </>
-  )
+  );
 }

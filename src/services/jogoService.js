@@ -11,7 +11,8 @@ export function restartarJogo(
     setGrafico,
     setBotaoCartas,
     setBotaoGrafico,
-    setIniciar
+    setIniciar,
+    setTreinamento
 ) {
     setPerguntasSelecionadas([]);
     setCategoriasSelecionadas([]);
@@ -26,7 +27,14 @@ export function restartarJogo(
     setBotaoCartas(0)
     setBotaoGrafico(0)
     setIniciar(false)
+    setTreinamento(false)
   }
+
+export function iniciarPerguntas(
+  setCarregarPerguntas
+ ){
+  setCarregarPerguntas(true)
+ } 
 
 export function pararJogo(
     nome,
