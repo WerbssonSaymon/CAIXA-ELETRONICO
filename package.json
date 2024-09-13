@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "github": "git add . && git commit -m \" Template das paginas home e usuario \" && git push origin modo-6"
+    "github": "git add . && git commit -m \" Template das paginas perguntas, cadastroUsuario e cadastroPerguntas \" && git push origin modo-6"
   },
   "dependencies": {
     "chart.js": "^4.4.4",

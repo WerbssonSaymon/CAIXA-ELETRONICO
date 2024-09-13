@@ -110,7 +110,7 @@ export default function formQuest({ setListaDePerguntas }) {
             />
           </div>
           <div className="d-flex">
-            <Link to={`/usuarios`}>
+            <Link to={`/perguntas`}>
               <ButtonAction label="Voltar" cor="outline-success" />
             </Link>
           </div>
