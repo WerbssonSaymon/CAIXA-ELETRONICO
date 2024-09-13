@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import FormViewUser from "../../componentes/organisms/formViewUser";
-import Subtitle from "../../componentes/atoms/subtitle";
-import Menu from "../../componentes/organisms/menu";
-import ViewUsers from "../../componentes/molecules/viewUsers";
+import InterfaceUsuario from "../../componentes/templates/interfaceUsuario";
 
 export default function gestao() {
   const [listaUsuarios, setListaUsuarios] = useState([]);
@@ -13,21 +10,8 @@ export default function gestao() {
   }, []);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      <Menu />
-      <div
-        className="bg-primary-tertiary d-flex flex-column align-items-center"
-        style={{ flex: 1, width: "100vw" }}
-      >
-        <FormViewUser />
-
-        <Subtitle subtitulo="Todos os usuarios cadastrados" />
-
-        <ViewUsers
-          listaUsuarios={listaUsuarios}
-          setListaUsuarios={setListaUsuarios}
-        />
-      </div>
-    </div>
+    <InterfaceUsuario 
+    listaUsuarios={listaUsuarios}
+    setListaUsuarios={setListaUsuarios}/>
   );
 }
