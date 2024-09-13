@@ -1,18 +1,20 @@
 import React from "react";
 import Menu from "../../componentes/organisms/menu";
-import Grafico from "../../componentes/atoms/grafich";
+import AreaGrafich from "../../componentes/molecules/areaGrafich";
 import Rank from "../../componentes/molecules/rank";
-import ButtonAction from "../../componentes/atoms/buttonAction";
-import ButtonHelp from "../../componentes/atoms/buttonHelp";
+import FooterGame from "../../componentes/molecules/footerGame";
+import AreaHelp from "../../componentes/molecules/areaHelp";
 import ButtonShop from "../../componentes/atoms/buttonShop";
 import ButtonGame from "../../componentes/atoms/buttonGame";
 import Shop from "../../componentes/atoms/shop";
-import Cards from "../../componentes/atoms/cards";
+import AreaCard from "../../componentes/molecules/areaCard";
 import AreaPoints from "../../componentes/molecules/areaPoints";
 import CategoryButton from "../../componentes/molecules/categoryButton";
 import AreaUser from "../../componentes/molecules/areaUser";
 import AreaQuests from "../../componentes/molecules/areaQuests";
 import AlternativesGame from "../../componentes/molecules/alternativesGame";
+import QuestGame from "../../componentes/atoms/questGame";
+import AreaBalance from "../../componentes/molecules/areaBalance";
 import { useState, useEffect, useRef } from "react";
 import { valores } from "../../data/quests";
 import {
@@ -181,11 +183,10 @@ export default function Jogo() {
             <div className="bg-primary bg-opacity-75 col">
               {perguntasSelecionadas.length > 0 && (
                 <>
-                  <div className="bg-game col-md-12 p-3">
-                    <h2 className="text-white text-uppercase">
-                      {perguntasSelecionadas[perguntaAtual].pergunta}
-                    </h2>
-                  </div>
+                  <QuestGame
+                    perguntasSelecionadas={perguntasSelecionadas}
+                    perguntaAtual={perguntaAtual}
+                  />
                   <AlternativesGame
                     alternativasEmbaralhadas={alternativasEmbaralhadas}
                     iniciar={iniciar}
@@ -209,17 +210,7 @@ export default function Jogo() {
                   />
                   {(iniciar || treinamento) && (
                     <div className="bg-game p-3 d-flex flex-column justify-content-around">
-                      <div className="d-flex justify-content-around">
-                        <h3 className="text-white text-uppercase">
-                          Participante: {nome}
-                        </h3>
-                        <span className="fs-4 text-white fw-semibold">
-                          {pontuacao.toLocaleString("pt-br", {
-                            style: "currency",
-                            currency: "BRL",
-                          })}
-                        </span>
-                      </div>
+                      <AreaBalance nome={nome} pontuacao={pontuacao} />
                       <AreaPoints
                         valores={valores}
                         perguntaAtual={perguntaAtual}
@@ -232,40 +223,18 @@ export default function Jogo() {
 
             <div className="bg-game col-md-6 d-flex flex-column justify-content-end">
               {cartas && (
-                <div className="w-100 d-flex flex-column align-items-center justify-content-center">
-                  <Cards
-                    label="Escolha uma carta"
-                    onChange={(e) =>
-                      eliminarAlternativas(
-                        e.target.value,
-                        alternativasEmbaralhadas,
-                        perguntasSelecionadas,
-                        perguntaAtual,
-                        embaralharPerguntas,
-                        setAlternativasEmbaralhadas,
-                        setBotaoCartas
-                      )
-                    }
-                  />
-                  <button
-                    className="w-100 mt-1 mb-3 btn btn-danger text-white flex-grow-1"
-                    onClick={() => setCartas(false)}
-                  >
-                    X
-                  </button>
-                </div>
+                <AreaCard
+                  alternativasEmbaralhadas={alternativasEmbaralhadas}
+                  perguntasSelecionadas={perguntasSelecionadas}
+                  perguntaAtual={perguntaAtual}
+                  embaralharPerguntas={embaralharPerguntas}
+                  setAlternativasEmbaralhadas={setAlternativasEmbaralhadas}
+                  setBotaoCartas={setBotaoCartas}
+                  setCartas={setCartas}
+                  eliminarAlternativas={eliminarAlternativas}
+                />
               )}
-              {grafico && (
-                <div className="w-100 d-flex flex-column align-items-center justify-content-center">
-                  <Grafico />
-                  <button
-                    className="w-100 mt-1 mb-3 btn btn-danger text-white flex-grow-1"
-                    onClick={() => setGrafico(false)}
-                  >
-                    X
-                  </button>
-                </div>
-              )}
+              {grafico && <AreaGrafich setGrafico={setGrafico} />}
               {loja && (
                 <Shop
                   refSelectLoja={refSelectLoja}
@@ -293,35 +262,26 @@ export default function Jogo() {
                   </div>
                 </div>
                 <div className="row d-flex align-items-center justify-content-center">
-                  <div className="col-md-12 my-2">
-                    <ButtonHelp
-                      label="Pular"
-                      botaoEstado={cliques >= 3}
-                      onClick={() =>
-                        pularPergunta(
-                          perguntasSelecionadas,
-                          perguntaAtual,
-                          obterPerguntaNaoUsada,
-                          embaralharPerguntas,
-                          setAlternativasEmbaralhadas,
-                          setPerguntasSelecionadas,
-                          setCliques
-                        )
-                      }
-                    />
-                    <ButtonHelp
-                      label="Cartas"
-                      botaoEstado={botaoCartas >= 1}
-                      onClick={() => mostrarCartas(cartas, setCartas)}
-                    />
-                    <ButtonHelp
-                      label="Universitário"
-                      botaoEstado={botaoGrafico}
-                      onClick={() =>
-                        mostrarGrafico(grafico, setGrafico, setBotaoGrafico)
-                      }
-                    />
-                  </div>
+                  <AreaHelp
+                    cliques={cliques}
+                    perguntasSelecionadas={perguntasSelecionadas}
+                    perguntaAtual={perguntaAtual}
+                    obterPerguntaNaoUsada={obterPerguntaNaoUsada}
+                    embaralharPerguntas={embaralharPerguntas}
+                    setAlternativasEmbaralhadas={setAlternativasEmbaralhadas}
+                    setPerguntasSelecionadas={setPerguntasSelecionadas}
+                    setCliques={setCliques}
+                    botaoCartas={botaoCartas}
+                    cartas={cartas}
+                    setCartas={setCartas}
+                    botaoGrafico={botaoGrafico}
+                    grafico={grafico}
+                    setGrafico={setGrafico}
+                    setBotaoGrafico={setBotaoGrafico}
+                    mostrarCartas={mostrarCartas}
+                    pularPergunta={pularPergunta}
+                    mostrarGrafico={mostrarGrafico}
+                  />
                 </div>
               </div>
             </div>
@@ -331,44 +291,27 @@ export default function Jogo() {
         )}
 
         {iniciar && (
-          <footer className="w-100 d-flex justify-content-center gap-3 py-2">
-            <ButtonAction
-              label="Reiniciar"
-              cor="warning"
-              onClick={() =>
-                restartarJogo(
-                  setPerguntasSelecionadas,
-                  setCategoriasSelecionadas,
-                  setPerguntaAtual,
-                  setPontuacao,
-                  setJogoTerminado,
-                  setMensagemFinal,
-                  setAlternativasEmbaralhadas,
-                  setNome,
-                  setCliques,
-                  setGrafico,
-                  setBotaoCartas,
-                  setBotaoGrafico,
-                  setIniciar,
-                  setTreinamento
-                )
-              }
-            />
-            <ButtonAction
-              label="Parar"
-              cor="danger"
-              onClick={() => {
-                pararJogo(
-                  nome,
-                  valores,
-                  perguntaAtual,
-                  setPontuacao,
-                  setMensagemFinal,
-                  setJogoTerminado
-                );
-              }}
-            />
-          </footer>
+          <FooterGame
+            setPerguntasSelecionadas={setPerguntasSelecionadas}
+            setCategoriasSelecionadas={setCategoriasSelecionadas}
+            setPerguntaAtual={setPerguntaAtual}
+            setPontuacao={setPontuacao}
+            setJogoTerminado={setJogoTerminado}
+            setMensagemFinal={setMensagemFinal}
+            setAlternativasEmbaralhadas={setAlternativasEmbaralhadas}
+            setNome={setNome}
+            setCliques={setCliques}
+            setGrafico={setGrafico}
+            setBotaoCartas={setBotaoCartas}
+            setBotaoGrafico={setBotaoGrafico}
+            setIniciar={setIniciar}
+            setTreinamento={setTreinamento}
+            nome={nome}
+            valores={valores}
+            perguntaAtual={perguntaAtual}
+            restartarJogo={restartarJogo}
+            pararJogo={pararJogo}
+          />
         )}
       </div>
     </div>
