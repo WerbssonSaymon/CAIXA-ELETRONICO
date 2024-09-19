@@ -26,7 +26,7 @@ export default function alternativesGame({
       {alternativasEmbaralhadas.map((alternativa, index) =>
         iniciar ? (
           <button
-            className="btn bg-game text-white text-uppercase p-3 fw-3 w-75 d-flex align-items-center justify-content-start"
+            className="btn bg-game text-white text-uppercase p-3 w-100 fw-3 d-flex align-items-center justify-content-start"
             key={index}
             onClick={() =>
               verificarResposta(
@@ -58,7 +58,7 @@ export default function alternativesGame({
         ) : (
           <button
             key={index}
-            className="btn bg-game text-white text-uppercase p-3 fw-3 w-75 d-flex align-items-center justify-content-start"
+            className="btn bg-game text-white text-uppercase p-3 fw-3 w-100 d-flex align-items-center justify-content-start"
             onClick={() =>
               verificarRespostaTreino(
                 alternativa,

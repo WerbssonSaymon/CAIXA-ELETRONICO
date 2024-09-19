@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "github": "git add . && git commit -m \" Template da pagina Banco \" && git push origin modo-6"
+    "github": "git add . && git commit -m \" Template da pagina Jogo e correção de componentes \" && git push origin modo-6"
   },
   "dependencies": {
     "chart.js": "^4.4.4",

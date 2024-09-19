@@ -22,7 +22,8 @@ export default function areaHelp({
   mostrarGrafico
 }) {
   return (
-    <div className="col-md-12 my-2">
+    <div className="col-md-12 my-2 d-flex justify-content-between">
+      
       <ButtonHelp
         label="Pular"
         botaoEstado={cliques >= 3}
